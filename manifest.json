@@ -1,0 +1,8 @@
+{
+    "domain": "securityspy",
+    "name": "SecuritySpy for Home Assistant",
+    "documentation": "https://github.com/briis/securityspy",
+    "dependencies": [],
+    "codeowners": ["@briis"],
+    "requirements": []
+}
