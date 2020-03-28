@@ -36,11 +36,21 @@ class securityspyEvents:
                         if data[:14].isnumeric():
                             event_arr = data.split(" ")
                             if event_arr[3] == "TRIGGER_M":
+                                # Check what triggered the motion
+                                object_type = "Video"
+                                if event_arr[4] == "2":
+                                    object_type = "Audio"
+                                elif event_arr[4] == "128":
+                                    object_type = "Human"
+                                elif event_arr[4] == "256":
+                                    object_type = "Vehicle"
+
                                 item = {
                                     "camera_id": event_arr[2],
                                     "event_time": event_arr[0],
                                     "motion": True,
-                                    "trigger_type": event_arr[4]
+                                    "trigger_type": event_arr[4],
+                                    "object_type": object_type,
                                 }
                                 event_data.update(item)
                             elif event_arr[3] == "FILE":
@@ -48,7 +58,8 @@ class securityspyEvents:
                                     "camera_id": event_arr[2],
                                     "event_time": event_arr[0],
                                     "motion": False,
-                                    "trigger_type": None
+                                    "trigger_type": None,
+                                    "object_type": None,
                                 }
                                 event_data.update(item)
                             if len(event_data) > 0 and self._callback:
