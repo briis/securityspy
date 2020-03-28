@@ -128,3 +128,9 @@ dmypy.json
 # Pyre type checker
 .pyre/
 securityspy.code-workspace
+custom_components/securityspy/event_test.py
+custom_components/securityspy/example.txt
+custom_components/securityspy/sse.py
+custom_components/securityspy/sserec.py
+custom_components/securityspy/stream.py
+custom_components/securityspy/test.py
