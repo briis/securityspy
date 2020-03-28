@@ -53,6 +53,7 @@ class securityspyEvents:
                                     "object_type": object_type,
                                 }
                                 event_data.update(item)
+
                             elif event_arr[3] == "FILE":
                                 item = {
                                     "camera_id": event_arr[2],
@@ -62,11 +63,13 @@ class securityspyEvents:
                                     "object_type": None,
                                 }
                                 event_data.update(item)
+                                
                             if len(event_data) > 0 and self._callback:
                                 self._callback(event_data)
 
             except Exception as ex:
-                print(ex)
+                if self._callback:
+                    self._callback(ex)
 
     def start(self):
         """ Call this to start the receiver thread """
