@@ -142,7 +142,7 @@ class SecSpyVideoCamera(Camera):
 
     def enable_motion_detection(self):
         """Enable motion detection in camera."""
-        ret = self.nvr_object.set_camera_recording(self._camera_id, "motion", "motion")
+        ret = self.nvr_object.set_camera_recording(self._camera_id, "motion")
         if not ret:
             return
 
@@ -152,7 +152,7 @@ class SecSpyVideoCamera(Camera):
 
     def disable_motion_detection(self):
         """Disable motion detection in camera."""
-        ret = self.nvr_object.set_camera_recording(self._camera_id, "never", "motion")
+        ret = self.nvr_object.set_camera_recording(self._camera_id, "never")
         if not ret:
             return
 
