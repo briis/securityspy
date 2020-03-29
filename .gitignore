@@ -138,3 +138,4 @@ custom_components/securityspy/pyhik.py
 .DS_Store
 .DS_Store
 custom_components/securityspy/securityspy_events.py
+.DS_Store

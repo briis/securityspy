@@ -38,6 +38,9 @@ _LOGGER = logging.getLogger(__name__)
 
 ATTR_CAMERA_ID = "camera_id"
 ATTR_ONLINE = "online"
+ATTR_TRIGGER_TYPE = "last_trigger_type"
+ATTR_LAST_TRIGGER = "last_trigger"
+ATTR_BRAND = "brand"
 
 CONF_RECORDING_MODE = "recording_mode"
 

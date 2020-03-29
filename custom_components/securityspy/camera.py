@@ -11,6 +11,7 @@ from . import (
     DEFAULT_BRAND,
     ATTR_CAMERA_ID,
     ATTR_ONLINE,
+    ATTR_LAST_TRIGGER,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -53,6 +54,7 @@ class SecSpyVideoCamera(Camera):
         self._motion_status = self._camera["recording_mode"]
         self._stream_source = self._camera["rtsp_video"]
         self._isrecording = False
+        self._last_trigger = None
         self._camera = None
         self._last_image = None
         self._supported_features = SUPPORT_STREAM if self._stream_source else 0
@@ -109,6 +111,7 @@ class SecSpyVideoCamera(Camera):
         attrs[ATTR_ATTRIBUTION] = DEFAULT_ATTRIBUTION
         attrs[ATTR_ONLINE] = self._online
         attrs[ATTR_CAMERA_ID] = self._camera_id
+        attrs[ATTR_LAST_TRIGGER] = self._last_trigger
 
         return attrs
 
@@ -119,6 +122,7 @@ class SecSpyVideoCamera(Camera):
 
         self._online = camera["online"]
         self._motion_status = camera["recording_mode"]
+        self._last_trigger = camera["motion_last_trigger"]
         if self._motion_status != "never" and self._online:
             self._isrecording = True
         else:
@@ -138,7 +142,7 @@ class SecSpyVideoCamera(Camera):
 
     def enable_motion_detection(self):
         """Enable motion detection in camera."""
-        ret = self.nvr_object.set_camera_recording(self._camera_id, "motion")
+        ret = self.nvr_object.set_camera_recording(self._camera_id, "motion", "motion")
         if not ret:
             return
 
@@ -148,7 +152,7 @@ class SecSpyVideoCamera(Camera):
 
     def disable_motion_detection(self):
         """Disable motion detection in camera."""
-        ret = self.nvr_object.set_camera_recording(self._camera_id, "never")
+        ret = self.nvr_object.set_camera_recording(self._camera_id, "never", "motion")
         if not ret:
             return
 

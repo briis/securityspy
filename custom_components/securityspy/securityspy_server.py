@@ -130,19 +130,27 @@ class securityspySvr:
             )
             return None
 
-    def set_camera_recording(self, camera_id, mode):
-        """ Sets the camera recoding mode to what is supplied with 'mode'.
-            Valid inputs for mode: never, motion, always
+    def set_camera_recording(self, camera_id, new_mode, current_mode):
+        """ Sets the camera recoding mode to what is supplied with '_newmode'.
+            Valid inputs for modes: never, motion, always and action
         """
-        if mode == "motion":
+        if new_mode == "motion":
             schedule = 1
             capturemode = "M"
-        elif mode == "always":
+        elif new_mode == "always":
             schedule = 1
             capturemode = "C"
+        elif new_mode == "action":
+            schedule = 1
+            capturemode = "A"
         else:
             schedule = 0
-            capturemode = "M"
+            if current_mode == "always":
+                capturemode = "C"
+            elif current_mode == "action":
+                capturemode = "A"
+            else:
+                capturemode = "M"
 
         cam_uri = "http://%s:%s/++setSchedule?cameraNum=%s&schedule=%s&mode=%s&auth=%s" % (self._host, self._port, camera_id, schedule, capturemode, self._auth)
 

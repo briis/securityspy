@@ -13,7 +13,14 @@ from homeassistant.const import (
     CONF_MONITORED_CONDITIONS,
 )
 from homeassistant.helpers.config_validation import PLATFORM_SCHEMA
-from . import NVR_DATA, DEFAULT_ATTRIBUTION, DEFAULT_BRAND
+from . import (
+    NVR_DATA,
+    ATTR_LAST_TRIGGER,
+    ATTR_TRIGGER_TYPE,
+    ATTR_BRAND,
+    DEFAULT_ATTRIBUTION,
+    DEFAULT_BRAND,
+    )
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -21,10 +28,6 @@ DEPENDENCIES = ["securityspy"]
 
 # Update Frequently as we are only reading from Memory
 SCAN_INTERVAL = timedelta(seconds=2)
-
-ATTR_BRAND = "brand"
-ATTR_TRIGGER_TYPE = "last_trigger_type"
-ATTR_LAST_TRIGGER = "last_trigger"
 
 # sensor_type [ description, unit, icon ]
 SENSOR_TYPES = {"motion": ["Motion", "motion", "motionDetected"]}
