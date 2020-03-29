@@ -21,6 +21,8 @@ from homeassistant.const import (
     CONF_FILENAME,
     CONF_SCAN_INTERVAL,
     ATTR_ENTITY_ID,
+    EVENT_HOMEASSISTANT_START,
+    EVENT_HOMEASSISTANT_STOP,
 )
 import homeassistant.helpers.config_validation as cv
 from homeassistant.exceptions import PlatformNotReady
@@ -82,6 +84,7 @@ def setup(hass, config):
         hass.data[NVR_DATA] = nvr.securityspySvr(
             host, port, username, password, use_ssl
         )
+        
         _LOGGER.debug("Connected to SecuritySpy Platform")
 
     except requests.exceptions.ConnectionError as ex:

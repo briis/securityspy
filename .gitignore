@@ -135,3 +135,6 @@ custom_components/securityspy/sserec.py
 custom_components/securityspy/stream.py
 custom_components/securityspy/test.py
 custom_components/securityspy/pyhik.py
+.DS_Store
+.DS_Store
+custom_components/securityspy/securityspy_events.py

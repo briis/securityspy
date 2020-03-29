@@ -8,8 +8,21 @@
 
 from datetime import datetime
 import requests
+import threading
 import xml.etree.ElementTree as ET
 from base64 import b64encode
+
+TRIGGER_TYPE = {
+    1: "Video motion detection",
+    2: "Audio detection",
+    4: "AppleScript",
+    8: "Camera event",
+    16: "Web server event",
+    32: "Triggered by another camera",
+    64: "Manual trigger",
+    128: "Human",
+    256: "Vehicle",
+}
 
 class securityspySvr:
     """ Main Class to retrieve data from the SecuritySpy Server """
@@ -27,6 +40,7 @@ class securityspySvr:
         self._auth = b64encode(bytes(self._user + ":" + self._pass,"utf-8")).decode()
         self.req = requests.session()
         self.update()
+        self.start_event_listner()
 
     @property
     def devices(self):
@@ -85,6 +99,9 @@ class securityspySvr:
                             "motion_sensitivity": mdsensitivity,
                             "image_width": image_width,
                             "image_height": image_height,
+                            "motion_last_trigger": None,
+                            "motion_on": False,
+                            "motion_trigger_type": None,
                         }
                     }
                     self.device_data.update(item)
@@ -141,3 +158,51 @@ class securityspySvr:
                 + response.reason
             )
             return None
+
+    def _event_listner(self):
+        """ Threaded Event Listner """
+
+        url = "http://%s:%s@%s:%s/++eventStream?version=3&format=multipart" % (self._user, self._pass, self._host, self._port)
+        events = requests.get(url, headers=None, stream=True)
+        
+        if events.status_code == 200:
+        
+            while self.running:
+                try:                
+                    for line in events.iter_lines(chunk_size=200):
+                        if not self.running:
+                            break
+
+                        if line:
+                            data = line.decode()
+                            if data[:14].isnumeric():
+                                event_arr = data.split(" ")
+                                camera_id = event_arr[2]
+                                if event_arr[3] == "TRIGGER_M" and camera_id != "X":
+                                    trigger_type = TRIGGER_TYPE[int(event_arr[4])]
+                                    self.device_data[camera_id]["motion_last_trigger"] = event_arr[0]
+                                    self.device_data[camera_id]["motion_on"] = True
+                                    self.device_data[camera_id]["motion_trigger_type"] = trigger_type
+
+                                elif event_arr[3] == "FILE" and camera_id != "X":
+                                    # self.device_data[camera_id]["motion_last_trigger"] = event_arr[0]
+                                    self.device_data[camera_id]["motion_on"] = False
+                                    self.device_data[camera_id]["motion_trigger_type"] = None
+                                
+                except Exception as ex:
+                    """ Do Nothing """
+                    print(ex)
+
+        else:
+            print(events.status_code, events.reason)
+                    
+            
+    def start_event_listner(self):
+        """ Call this to start the receiver thread """
+        self.running = True
+        self.thread = threading.Thread(target = self._event_listner)
+        self.thread.start()
+
+    def stop_event_listner(self):
+        """ Call this to stop the receiver """
+        self.running = False

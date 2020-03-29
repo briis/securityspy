@@ -2,10 +2,16 @@
 import logging
 import voluptuous as vol
 from datetime import timedelta
+import requests
 
 import homeassistant.helpers.config_validation as cv
+from homeassistant.exceptions import PlatformNotReady
 from homeassistant.components.binary_sensor import BinarySensorDevice
-from homeassistant.const import ATTR_ATTRIBUTION, ATTR_FRIENDLY_NAME, CONF_MONITORED_CONDITIONS
+from homeassistant.const import (
+    ATTR_ATTRIBUTION,
+    ATTR_FRIENDLY_NAME,
+    CONF_MONITORED_CONDITIONS,
+)
 from homeassistant.helpers.config_validation import PLATFORM_SCHEMA
 from . import NVR_DATA, DEFAULT_ATTRIBUTION, DEFAULT_BRAND
 
@@ -17,6 +23,8 @@ DEPENDENCIES = ["securityspy"]
 SCAN_INTERVAL = timedelta(seconds=2)
 
 ATTR_BRAND = "brand"
+ATTR_TRIGGER_TYPE = "Trigger Type"
+ATTR_LAST_TRIGGER = "Last Trigger"
 
 # sensor_type [ description, unit, icon ]
 SENSOR_TYPES = {"motion": ["Motion", "motion", "motionDetected"]}
@@ -28,7 +36,6 @@ PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(
         ),
     }
 )
-
 
 async def async_setup_platform(hass, config, async_add_entities, _discovery_info=None):
     """Set up an SecuritySpy binary sensor."""
@@ -43,7 +50,6 @@ async def async_setup_platform(hass, config, async_add_entities, _discovery_info
 
     async_add_entities(sensors, True)
 
-
 class SecSpyBinarySensor(BinarySensorDevice):
     """A Unifi Protect Binary Sensor."""
 
@@ -56,9 +62,12 @@ class SecSpyBinarySensor(BinarySensorDevice):
         self._unique_id = self._name.lower().replace(" ", "_")
         self._sensor_type = sensor_type
         self._state = False
+        self._trigger_type = None
+        self._last_trigger = None
         self._class = SENSOR_TYPES.get(self._sensor_type)[1]
         self._attr = SENSOR_TYPES.get(self._sensor_type)[2]
-        _LOGGER.debug("SecSpyBinarySensor: %s created", self._name)
+
+        _LOGGER.debug("Binary Sensor: %s added to Home Assistant", self._name)
 
     @property
     def unique_id(self):
@@ -83,11 +92,13 @@ class SecSpyBinarySensor(BinarySensorDevice):
         attrs[ATTR_ATTRIBUTION] = DEFAULT_ATTRIBUTION
         attrs[ATTR_BRAND] = DEFAULT_BRAND
         attrs[ATTR_FRIENDLY_NAME] = self._name
+        attrs[ATTR_LAST_TRIGGER] = self._last_trigger
+        attrs[ATTR_TRIGGER_TYPE] = self._trigger_type
 
         return attrs
 
     def update(self):
-        """ Updates Motions State."""
-
+        """ Updates Sensor State."""
         self._state = self._camera["motion_on"]
-
+        self._trigger_type = self._camera["motion_trigger_type"]
+        self._last_trigger = self._camera["motion_last_trigger"]
