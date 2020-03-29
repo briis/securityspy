@@ -23,8 +23,8 @@ DEPENDENCIES = ["securityspy"]
 SCAN_INTERVAL = timedelta(seconds=2)
 
 ATTR_BRAND = "brand"
-ATTR_TRIGGER_TYPE = "Trigger Type"
-ATTR_LAST_TRIGGER = "Last Trigger"
+ATTR_TRIGGER_TYPE = "last_trigger_type"
+ATTR_LAST_TRIGGER = "last_trigger"
 
 # sensor_type [ description, unit, icon ]
 SENSOR_TYPES = {"motion": ["Motion", "motion", "motionDetected"]}

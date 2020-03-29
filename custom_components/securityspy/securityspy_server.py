@@ -185,9 +185,7 @@ class securityspySvr:
                                     self.device_data[camera_id]["motion_trigger_type"] = trigger_type
 
                                 elif event_arr[3] == "FILE" and camera_id != "X":
-                                    # self.device_data[camera_id]["motion_last_trigger"] = event_arr[0]
                                     self.device_data[camera_id]["motion_on"] = False
-                                    self.device_data[camera_id]["motion_trigger_type"] = None
                                 
                 except Exception as ex:
                     """ Do Nothing """
