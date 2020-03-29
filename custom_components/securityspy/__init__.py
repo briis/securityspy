@@ -54,6 +54,11 @@ DEFAULT_SSL = False
 DOMAIN = "securityspy"
 NVR_DATA = DOMAIN
 
+TYPE_RECORD_MOTION = "motion"
+TYPE_RECORD_ALLWAYS = "always"
+TYPE_RECORD_NEVER = "never"
+TYPE_RECORD_ACTION = "action"
+
 SERVICE_SET_RECORDING_MODE = "set_recording_mode"
 
 CONFIG_SCHEMA = vol.Schema(
