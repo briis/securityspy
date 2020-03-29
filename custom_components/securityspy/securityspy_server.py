@@ -162,7 +162,7 @@ class securityspySvr:
     def _event_listner(self):
         """ Threaded Event Listner """
 
-        url = "http://%s:%s@%s:%s/++eventStream?version=3&format=multipart" % (self._user, self._pass, self._host, self._port)
+        url = "http://%s:%s/++eventStream?version=3&format=multipart&auth=%s" % (self._host, self._port, self._auth)
         events = requests.get(url, headers=None, stream=True)
         
         if events.status_code == 200:
