@@ -71,7 +71,6 @@ class SecspySwitch(SwitchDevice):
         self._unique_id = self._name.lower().replace(" ", "_")
         self._icon = "mdi:{}".format(SWITCH_TYPES.get(switch_type)[1])
         self._state = STATE_OFF
-        self._camera_type = self._camera["type"]
         self._attr = SWITCH_TYPES.get(switch_type)[2]
         self._switch_type = SWITCH_TYPES.get(switch_type)[2]
 
@@ -115,15 +114,12 @@ class SecspySwitch(SwitchDevice):
     def turn_on(self, **kwargs):
         """Turn the device on."""
         if self._switch_type == "record_motion":
-            _LOGGER.debug("Turning on Motion Detection")
             self.data.set_camera_recording(self._camera_id, TYPE_RECORD_MOTION)
         else:
-            _LOGGER.debug("Turning on Constant Recording")
             self.data.set_camera_recording(self._camera_id, TYPE_RECORD_ALLWAYS)
 
     def turn_off(self, **kwargs):
         """Turn the device off."""
-        _LOGGER.debug("Turning off Recording")
         self.data.set_camera_recording(self._camera_id, TYPE_RECORD_NEVER)
 
     def update(self):
@@ -132,6 +128,5 @@ class SecspySwitch(SwitchDevice):
             enabled = True if self._camera["recording_mode"] == TYPE_RECORD_MOTION else False
         else:
             enabled = True if self._camera["recording_mode"] == TYPE_RECORD_ALLWAYS else False
-        _LOGGER.debug("enabled: %s", enabled)
         self._state = STATE_ON if enabled else STATE_OFF
 
