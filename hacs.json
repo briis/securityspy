@@ -1,5 +1,5 @@
 {
-    "name": "SecuritySpyfor Home Assistant",
-    "domains": ["binary_sensor", "sensor", "camera"],
+    "name": "SecuritySpy for Home Assistant",
+    "domains": ["binary_sensor", "camera", "switch"],
     "iot_class": "Local Polling"
 }
