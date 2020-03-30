@@ -183,7 +183,9 @@ class securityspySvr:
                                 camera_id = event_arr[2]
                                 if event_arr[3] == "TRIGGER_M" and camera_id != "X":
                                     trigger_type = TRIGGER_TYPE[int(event_arr[4])]
-                                    self.device_data[camera_id]["motion_last_trigger"] = event_arr[0]
+                                    time_raw = event_arr[0]
+                                    time_text = time_raw[:-10] + "-" + time_raw[4:-8] + "-" + time_raw[6:-6] + " " + time_raw[8:-4] + ":" + time_raw[10:-2] + ":" + time_raw[12:]
+                                    self.device_data[camera_id]["motion_last_trigger"] = time_text
                                     self.device_data[camera_id]["motion_on"] = True
                                     self.device_data[camera_id]["motion_trigger_type"] = trigger_type
 
@@ -207,3 +209,4 @@ class securityspySvr:
     def stop_event_listner(self):
         """ Call this to stop the receiver """
         self.running = False
+
