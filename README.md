@@ -45,9 +45,9 @@ This Integration is not part of the default HACS store yet. You can add is a Cus
 
 ## Configuration
 
-Start by configuring the core platform. No matter which of the entities you activate, this has to be configured. The core platform by itself does nothing else than establish a link to the *SecuritySpy NVR*, so by activating this you will not see any entities being created in Home Assistant.
+Start by configuring the core platform. No matter which of the entities you activate, this has to be configured. The core platform by itself does nothing else than establish a link to the *SecuritySpy Server*, so by activating this you will not see any entities being created in Home Assistant.
 
-Edit your *configuration.yaml* file and add the *unifiprotect* component to the file:
+Edit your *configuration.yaml* file and add the *securityspy* component to the file:
 
 ```yaml
 # Example configuration.yaml entry
