@@ -14,7 +14,7 @@ This warning can be ignored, and the Integration will still work as expected.
 
 Before you install this Integration you need to ensure that the following settings are applied in SecuritySpy:
 
-![Web Server Setup](https://github.com/briis/securityspy/blob/master/support_files/secspy_settings.png)
+![Web Server Setup](https://github.com/briis/securityspy/blob/master/support_files/secspy_webserver.png)
 
 *To be updated...*
 
