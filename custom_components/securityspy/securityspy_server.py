@@ -8,6 +8,7 @@
 
 from datetime import datetime
 import requests
+import urllib.parse
 import threading
 import xml.etree.ElementTree as ET
 from base64 import b64encode
@@ -102,6 +103,7 @@ class securityspySvr:
                             "motion_last_trigger": None,
                             "motion_on": False,
                             "motion_trigger_type": None,
+                            "motion_last_recording": None,
                         }
                     }
                     self.device_data.update(item)
@@ -190,6 +192,15 @@ class securityspySvr:
                                     self.device_data[camera_id]["motion_trigger_type"] = trigger_type
 
                                 elif event_arr[3] == "FILE" and camera_id != "X":
+                                    year = datetime.now().year
+                                    filename = ""
+                                    for x in range(4, len(event_arr)):
+                                        filename = filename + event_arr[x] + " "
+                                    filename = filename.rstrip()
+                                    pos = filename.find("/" + str(year))
+                                    webfile = urllib.parse.quote_plus(filename[pos + 1 :], safe='/')
+                                    weburl = "http://%s:%s/++getfilehb/%s/%s?auth=%s" % (self._host, self._port, camera_id, webfile, self._auth)
+                                    self.device_data[camera_id]["motion_last_recording"] = weburl
                                     self.device_data[camera_id]["motion_on"] = False
                                 
                 except Exception as ex:

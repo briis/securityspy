@@ -67,6 +67,7 @@ class SecSpyBinarySensor(BinarySensorDevice):
         self._state = False
         self._trigger_type = None
         self._last_trigger = None
+        self._last_recording = None
         self._class = SENSOR_TYPES.get(self._sensor_type)[1]
         self._attr = SENSOR_TYPES.get(self._sensor_type)[2]
 
@@ -97,6 +98,7 @@ class SecSpyBinarySensor(BinarySensorDevice):
         attrs[ATTR_FRIENDLY_NAME] = self._name
         attrs[ATTR_LAST_TRIGGER] = self._last_trigger
         attrs[ATTR_TRIGGER_TYPE] = self._trigger_type
+        attrs["last_recording"] = self._last_recording
 
         return attrs
 
@@ -105,3 +107,4 @@ class SecSpyBinarySensor(BinarySensorDevice):
         self._state = self._camera["motion_on"]
         self._trigger_type = self._camera["motion_trigger_type"]
         self._last_trigger = self._camera["motion_last_trigger"]
+        self._last_recording = self._camera["motion_last_recording"]
