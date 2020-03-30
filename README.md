@@ -14,4 +14,6 @@ This warning can be ignored, and the Integration will still work as expected.
 
 Before you install this Integration you need to ensure that the following settings are applied in SecuritySpy:
 
+*To be updated...*
+
 **This program is under development. The code in here might work. Once this message is removed, the code should be finished.**
