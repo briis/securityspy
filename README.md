@@ -54,8 +54,8 @@ Edit your *configuration.yaml* file and add the *securityspy* component to the f
 securityspy:
   host: <Internal ip address of your SecuritySpy Server>
   port: <Port Number>
-  username: <your SecuritySpy username>
-  password: <Your SecuritySpy Password>
+  username: <your SecuritySpy Web username>
+  password: <Your SecuritySpy Web Password>
 ```
 
 **host**:  
@@ -69,5 +69,41 @@ securityspy:
 
 **password**  
 (string)(Required) The password you setup under the *Prerequisites* section.  
+
+### Camera
+
+The Integration will add all Cameras currently connected to SecuritySpy. If you add more cameras, you will have to restart Home Assistant to see them in Home Assistant.
+
+#### Remember
+
+* if you already setup the camera using another platform, like the `Generic IP Platform` then remove those before you setup this Platform, as cameras with the same name cannot co-exist.
+* Also, if you are running your Home Assistant installation directly on a Mac, you might need to enable `stream:` in your `configuration.yaml` to be able to do live streaming.
+
+Edit your *configuration.yaml* file and add the *unifiprotect* component to the file:
+
+```yaml
+# Example configuration.yaml entry
+camera:
+  - platform: securityspy
+```
+
+### Binary Sensor
+
+If this component is enabled a Binary Motion Sensor for each camera configured, will be created.
+
+In order to use the Binary Sensors, add the following to your *configuration.yaml* file:
+
+```yaml
+# Example configuration.yaml entry
+binary_sensor:
+  - platform: securityspy
+```
+
+The Binary Sensors will also have a few extra Attributes. One of the is `last_trigger_type` that uses the built-in Ai from SecuritySpy to detect what has triggered the motion. Currently it can detect Humans and Vehicles. You can play around with the settings for that in SecuritySpy Preferences.
+
+**Note:** Motion will only be triggered if the Camera is Armed, either on Motion or Always.
+
+
+
 
 **This program is under development. The code in here might work. Once this message is removed, the code should be finished.**
