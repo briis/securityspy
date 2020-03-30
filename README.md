@@ -79,7 +79,7 @@ The Integration will add all Cameras currently connected to SecuritySpy. If you 
 * if you already setup the camera using another platform, like the `Generic IP Platform` then remove those before you setup this Platform, as cameras with the same name cannot co-exist.
 * Also, if you are running your Home Assistant installation directly on a Mac, you might need to enable `stream:` in your `configuration.yaml` to be able to do live streaming.
 
-Edit your *configuration.yaml* file and add the *unifiprotect* component to the file:
+Edit your *configuration.yaml* file and add the *securityspy* component to the file:
 
 ```yaml
 # Example configuration.yaml entry
@@ -103,7 +103,14 @@ The Binary Sensors will also have a few extra Attributes. One of the is `last_tr
 
 **Note:** Motion will only be triggered if the Camera is Armed, either on Motion or Always.
 
+### Switch
 
+If this component is enabled two Switches are created per Camera. One to enable or disable motion recording and one to enable or disable constant recording for each camera.
 
+In order to use the Switch, add the following to your *configuration.yaml* file:
 
-**This program is under development. The code in here might work. Once this message is removed, the code should be finished.**
+```yaml
+# Example configuration.yaml entry
+switch:
+  - platform: securityspy
+```
