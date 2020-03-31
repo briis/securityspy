@@ -139,3 +139,4 @@ custom_components/securityspy/pyhik.py
 .DS_Store
 custom_components/securityspy/securityspy_events.py
 .DS_Store
+support_files/cap_list.xml
