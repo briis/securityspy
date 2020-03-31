@@ -20,7 +20,7 @@ Before you install this Integration you need to ensure that the following settin
 
 1. **Enable the Web Server** Open SecuritySpy on your Mac. Select *Preferences* from the SecuritySpy Menu and click the *Web* icon on the Top Left. Make sure that *HTTP enabled on Port* is selected and note the Port number as you need this later. Default is port 8000, but you are free to select another port if you want to. Currently SSL is not supported, so it does not have to be selected, but you can do, if you want to use this with external access.
 
-2. **Add a Web Server User** You must add a user with either *Administrator* privileges or at least *Get Live Video and Images* and *Arm and Disarm, set schedules* privileges. **Note**: This might not be enough, as I have seen some errors, when using a user like that. If you want to be sure that it works for now, give the *Administrative* rights.
+2. **Add a Web Server User** You must add a user with either *Administrator* privileges or at least *Get Live Video and Images* and *Arm and Disarm, set schedules* privileges. **Note**: This might not be enough, as I have seen some errors, when using a user like that. If you want to be sure that it works for now, give the user *Administrative* rights.
 
 ![Web Server Setup](https://github.com/briis/securityspy/blob/master/support_files/secspy_webserver_sm.png) ![User Setup](https://github.com/briis/securityspy/blob/master/support_files/secspy_users_sm.png) 
 
