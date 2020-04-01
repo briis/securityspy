@@ -10,6 +10,7 @@ from datetime import datetime
 import requests
 import urllib.parse
 import threading
+import logging
 import xml.etree.ElementTree as ET
 from base64 import b64encode
 
@@ -124,12 +125,8 @@ class securityspySvr:
         if response.status_code == 200:
             return response.content
         else:
-            print(
-                "Error Code: "
-                + str(response.status_code)
-                + " - Error Status: "
-                + response.reason
-            )
+            message = "Error Code: " + str(response.status_code) + " - Error Status: " + response.reason
+            logging.debug(message)
             return None
 
     def set_camera_recording(self, camera_id, new_mode):
@@ -156,12 +153,8 @@ class securityspySvr:
             self.device_data[camera_id]["recording_mode"] = new_mode
             return True
         else:
-            print(
-                "Error Code: "
-                + str(response.status_code)
-                + " - Error Status: "
-                + response.reason
-            )
+            message = "Error Code: " + str(response.status_code) + " - Error Status: " + response.reason
+            logging.debug(message)
             return None
 
     def _event_listner(self):
@@ -205,11 +198,13 @@ class securityspySvr:
                                 
                 except Exception as ex:
                     """ Do Nothing """
-                    print(ex)
+                    logging.debug(ex)
+                    pass
 
         else:
-            print(events.status_code, events.reason)
-                    
+            message = "Error Code: " + str(events.status_code) + " - Error Status: " + events.reason
+            logging.debug(message)
+            pass                    
             
     def start_event_listner(self):
         """ Call this to start the receiver thread """
