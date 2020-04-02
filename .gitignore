@@ -140,3 +140,4 @@ custom_components/securityspy/pyhik.py
 custom_components/securityspy/securityspy_events.py
 .DS_Store
 support_files/cap_list.xml
+custom_components/securityspy/securityspy_server_async.py

@@ -215,4 +215,3 @@ class securityspySvr:
     def stop_event_listner(self):
         """ Call this to stop the receiver """
         self.running = False
-
