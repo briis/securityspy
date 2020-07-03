@@ -2,7 +2,12 @@
     "domain": "securityspy",
     "name": "SecuritySpy for Home Assistant",
     "documentation": "https://github.com/briis/securityspy",
+    "issue_tracker": "https://github.com/briis/securityspy/issues",
     "dependencies": [],
-    "codeowners": ["@briis"],
-    "requirements": ["pysecurityspy==0.1.2"]
+    "codeowners": [
+        "@briis"
+    ],
+    "requirements": [
+        "pysecurityspy==0.1.3"
+    ]
 }
