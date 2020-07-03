@@ -1,0 +1,33 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "title": "SecuritySpy",
+                "description": "Set up SecuritySpy to monitor cameras and sensors.",
+                "data": {
+                    "host": "IP Address of SecuritySpy Server",
+                    "port": "Port Number",
+                    "username": "Username",
+                    "password": "Password",
+                    "scan_interval": "Scan interval (Pull slider to de- or increase time)"
+                }
+            }
+        },
+        "error": {
+            "connection_error": "Failed to connect. Wrong IP or Username/Password.",
+            "nvr_error": "Error retrieving data from SecuritySpy."
+        },
+        "abort": {
+            "server_exists": "SecuritySpy Server allready configured."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "Scan interval (Pull slider to de- or increase time)"
+                }
+            }
+        }
+    }
+}

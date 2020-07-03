@@ -1,0 +1,33 @@
+{
+    "config": {
+        "abort": {
+            "server_exists": "Denne SecuritySpy Server er allerede konfigureret."
+        },
+        "error": {
+            "connection_error": "Kan ikke forbinde. Forkert IP eller Brugernavn/Kodeord.",
+            "nvr_error": "Kan ikke hente data fra SecuritySpy."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "IP adresse på SecuritySpy Serveren",
+                    "port": "Port nummer",
+                    "username": "Brugernavn",
+                    "password": "Kodeord",
+                    "scan_interval": "Opdaterings frekvens"
+                },
+                "description": "Konfigurer SecuritySpy for at monitorere kameraer og sensorer.",
+                "title": "SecuritySpy"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "Opdaterings frekvens"
+                }
+            }
+        }
+    }
+}
