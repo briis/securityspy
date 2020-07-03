@@ -106,4 +106,51 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool
         "secspy": securityspy,
     }
 
+    await _async_get_or_create_nvr_device_in_registry(hass, entry, server_info)
+
+    for platform in SECURITYSPY_PLATFORMS:
+        hass.async_create_task(
+            hass.config_entries.async_forward_entry_setup(entry, platform)
+        )
+
+    if not entry.update_listeners:
+        entry.add_update_listener(async_update_options)
+
     return True
+
+
+async def _async_get_or_create_nvr_device_in_registry(
+    hass: HomeAssistantType, entry: ConfigEntry, nvr
+) -> None:
+    device_registry = await dr.async_get_registry(hass)
+    device_registry.async_get_or_create(
+        config_entry_id=entry.entry_id,
+        connections={(dr.CONNECTION_NETWORK_MAC, entry.data[CONF_HOST])},
+        identifiers={(DOMAIN, entry.data[CONF_HOST])},
+        manufacturer=DEFAULT_BRAND,
+        name=entry.data[CONF_ID],
+        model=nvr["name"],
+        sw_version=nvr["version"],
+    )
+
+
+async def async_update_options(hass: HomeAssistantType, entry: ConfigEntry):
+    """Update options."""
+    await hass.config_entries.async_reload(entry.entry_id)
+
+
+async def async_unload_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool:
+    """Unload Unifi Protect config entry."""
+    unload_ok = all(
+        await asyncio.gather(
+            *[
+                hass.config_entries.async_forward_entry_unload(entry, component)
+                for component in SECURITYSPY_PLATFORMS
+            ]
+        )
+    )
+
+    if unload_ok:
+        hass.data[DOMAIN].pop(entry.entry_id)
+
+    return unload_ok
