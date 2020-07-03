@@ -3,7 +3,7 @@
 import voluptuous as vol
 from homeassistant.helpers import config_validation as cv
 
-DOMAIN = "unifiprotect"
+DOMAIN = "securityspy"
 UNIQUE_ID = "unique_id"
 
 DEFAULT_PORT = 8000
