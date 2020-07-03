@@ -4,5 +4,5 @@
     "documentation": "https://github.com/briis/securityspy",
     "dependencies": [],
     "codeowners": ["@briis"],
-    "requirements": []
+    "requirements": ["pysecurityspy==0.1.2"]
 }
