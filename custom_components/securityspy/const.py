@@ -10,3 +10,8 @@ DEFAULT_PORT = 8000
 DEFAULT_ATTRIBUTION = "Powered by SecuritySpy Server"
 DEFAULT_BRAND = "@bensoftware"
 DEFAULT_SCAN_INTERVAL = 10
+
+SECURITYSPY_PLATFORMS = [
+    # "camera",
+    "binary_sensor",
+]

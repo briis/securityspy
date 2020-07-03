@@ -4,10 +4,8 @@ import voluptuous as vol
 
 from pysecurityspy import (
     SecuritySpyServer,
-    SecuritySpyEvents,
     InvalidCredentials,
     RequestError,
-    ResultError,
 )
 
 from homeassistant import config_entries
