@@ -7,10 +7,10 @@ from .const import DOMAIN, DEFAULT_BRAND
 class SecuritySpyEntity(Entity):
     """Base class for SecuritySpy entities."""
 
-    def __init__(self, upv_object, coordinator, camera_id, sensor_type):
+    def __init__(self, server_object, coordinator, camera_id, sensor_type):
         """Initialize the entity."""
         super().__init__()
-        self.upv_object = upv_object
+        self.server_object = server_object
         self.coordinator = coordinator
         self._camera_id = camera_id
         self._sensor_type = sensor_type

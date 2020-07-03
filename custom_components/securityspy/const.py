@@ -12,6 +12,6 @@ DEFAULT_BRAND = "@bensoftware"
 DEFAULT_SCAN_INTERVAL = 10
 
 SECURITYSPY_PLATFORMS = [
-    # "camera",
-    "binary_sensor",
+    "camera",
+    # "binary_sensor",
 ]
