@@ -40,7 +40,7 @@ class SecuritySpyEntity(Entity):
     @property
     def device_info(self):
         return {
-            "connections": {(dr.CONNECTION_NETWORK_MAC, self._mac)},
+            "connections": {(dr.CONNECTION_NETWORK_MAC, self._server_id)},
             "name": self._camera_name,
             "manufacturer": DEFAULT_BRAND,
             "model": self._device_type,
