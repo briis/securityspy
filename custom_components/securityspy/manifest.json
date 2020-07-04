@@ -9,6 +9,6 @@
         "@briis"
     ],
     "requirements": [
-        "pysecurityspy==0.1.3"
+        "pysecurityspy==0.1.5"
     ]
 }

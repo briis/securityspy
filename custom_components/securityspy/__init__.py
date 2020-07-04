@@ -91,7 +91,7 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool
     )
 
     try:
-        server_info = await securityspy.get_server_information()
+        nvr = await securityspy.get_server_information()
     except InvalidCredentials:
         _LOGGER.error(
             "Could not Authorize against SecuritySpy. Please reinstall the Integration."
@@ -104,9 +104,10 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool
     hass.data[DOMAIN][entry.entry_id] = {
         "coordinator": coordinator,
         "secspy": securityspy,
+        "nvr": nvr,
     }
 
-    await _async_get_or_create_nvr_device_in_registry(hass, entry, server_info)
+    await _async_get_or_create_nvr_device_in_registry(hass, entry, nvr)
 
     for platform in SECURITYSPY_PLATFORMS:
         hass.async_create_task(
@@ -125,8 +126,8 @@ async def _async_get_or_create_nvr_device_in_registry(
     device_registry = await dr.async_get_registry(hass)
     device_registry.async_get_or_create(
         config_entry_id=entry.entry_id,
-        connections={(dr.CONNECTION_NETWORK_MAC, entry.data[CONF_HOST])},
-        identifiers={(DOMAIN, entry.data[CONF_HOST])},
+        connections={(dr.CONNECTION_NETWORK_MAC, nvr["host"])},
+        identifiers={(DOMAIN, nvr["host"])},
         manufacturer=DEFAULT_BRAND,
         name=entry.data[CONF_ID],
         model=nvr["name"],

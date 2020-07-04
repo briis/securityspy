@@ -11,6 +11,8 @@ DEFAULT_ATTRIBUTION = "Powered by SecuritySpy Server"
 DEFAULT_BRAND = "@bensoftware"
 DEFAULT_SCAN_INTERVAL = 10
 
+ATTR_ONLINE = "online"
+
 SECURITYSPY_PLATFORMS = [
     "camera",
     # "binary_sensor",

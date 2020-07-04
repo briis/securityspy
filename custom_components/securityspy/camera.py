@@ -6,6 +6,12 @@ from homeassistant.const import (
     ATTR_ATTRIBUTION,
     ATTR_LAST_TRIP_TIME,
 )
+from pysecurityspy import (
+    RECORDING_MODE_ALWAYS,
+    RECORDING_MODE_MOTION,
+    RECORDING_MODE_ACTION,
+    RECORDING_MODE_NEVER,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.typing import HomeAssistantType
 from homeassistant.helpers import entity_platform
@@ -14,6 +20,7 @@ from .const import (
     DOMAIN,
     DEFAULT_ATTRIBUTION,
     DEFAULT_BRAND,
+    ATTR_ONLINE,
 )
 from .entity import SecuritySpyEntity
 
@@ -24,18 +31,19 @@ async def async_setup_entry(
     hass: HomeAssistantType, entry: ConfigEntry, async_add_entities
 ) -> None:
     """Discover cameras on a Unifi Protect NVR."""
-    server_object = hass.data[DOMAIN][entry.entry_id]["secspy"]
+    secspy = hass.data[DOMAIN][entry.entry_id]["secspy"]
     coordinator = hass.data[DOMAIN][entry.entry_id]["coordinator"]
+    nvr = hass.data[DOMAIN][entry.entry_id]["nvr"]
     if not coordinator.data:
         return
 
     cameras = [camera for camera in coordinator.data]
 
     async_add_entities(
-        [SecuritySpyCamera(server_object, coordinator, camera) for camera in cameras]
+        [SecuritySpyCamera(secspy, coordinator, nvr, camera) for camera in cameras]
     )
 
-    platform = entity_platform.current_platform.get()
+    # platform = entity_platform.current_platform.get()
 
     # platform.async_register_entity_service(
     #     SERVICE_SET_RECORDING_MODE,
@@ -57,9 +65,9 @@ async def async_setup_entry(
 class SecuritySpyCamera(SecuritySpyEntity, Camera):
     """A SecuritySpy Camera."""
 
-    def __init__(self, server_object, coordinator, camera_id):
+    def __init__(self, secspy, coordinator, nvr, camera_id):
         """Initialize an Unifi camera."""
-        super().__init__(server_object, coordinator, camera_id, None)
+        super().__init__(secspy, coordinator, nvr, camera_id, None)
         self._name = self._camera_data["name"]
         self._stream_source = self._camera_data["rtsp_video"]
         self._last_image = None
@@ -103,17 +111,10 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
     @property
     def device_state_attributes(self):
         """Add additional Attributes to Camera."""
-        # if self._device_type == DEVICE_CLASS_DOORBELL:
-        #     last_trip_time = self._camera_data["last_ring"]
-        # else:
-        #     last_trip_time = self._camera_data["last_motion"]
 
         return {
             ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
-            # ATTR_UP_SINCE: self._camera_data["up_since"],
-            # ATTR_ONLINE: self._camera_data["online"],
-            # ATTR_CAMERA_ID: self._camera_id,
-            # ATTR_LAST_TRIP_TIME: last_trip_time,
+            ATTR_ONLINE: self._camera_data["online"],
         }
 
     # async def async_set_recording_mode(self, recording_mode):
@@ -143,33 +144,33 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
     #     except OSError as err:
     #         _LOGGER.error("Can't write image to file: %s", err)
 
-    # async def async_set_ir_mode(self, ir_mode):
-    #     """Set camera ir mode."""
-    #     await self.upv_object.set_camera_ir(self._camera_id, ir_mode)
-
     async def async_update(self):
         """Update the entity.
         Only used by the generic entity update service.
         """
         await self.coordinator.async_request_refresh()
 
-    # async def async_enable_motion_detection(self):
-    #     """Enable motion detection in camera."""
-    #     ret = await self.upv_object.set_camera_recording(self._camera_id, "motion")
-    #     if not ret:
-    #         return
-    #     _LOGGER.debug("Motion Detection Enabled for Camera: %s", self._name)
+    async def async_enable_motion_detection(self):
+        """Enable motion detection in camera."""
+        ret = await self.secspy.set_recording_mode(
+            self._camera_id, RECORDING_MODE_MOTION
+        )
+        if not ret:
+            return
+        _LOGGER.debug("Motion Detection Enabled for Camera: %s", self._name)
 
-    # async def async_disable_motion_detection(self):
-    #     """Disable motion detection in camera."""
-    #     ret = await self.upv_object.set_camera_recording(self._camera_id, "never")
-    #     if not ret:
-    #         return
-    #     _LOGGER.debug("Motion Detection Disabled for Camera: %s", self._name)
+    async def async_disable_motion_detection(self):
+        """Disable motion detection in camera."""
+        ret = await self.secspy.set_recording_mode(
+            self._camera_id, RECORDING_MODE_NEVER
+        )
+        if not ret:
+            return
+        _LOGGER.debug("Motion Detection Disabled for Camera: %s", self._name)
 
     async def async_camera_image(self):
         """ Return the Camera Image. """
-        last_image = await self.upv_object.get_snapshot_image(self._camera_id)
+        last_image = await self.secspy.get_snapshot_image(self._camera_id)
         self._last_image = last_image
         return self._last_image
 
