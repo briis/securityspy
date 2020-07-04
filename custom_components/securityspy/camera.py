@@ -21,6 +21,11 @@ from .const import (
     DEFAULT_ATTRIBUTION,
     DEFAULT_BRAND,
     ATTR_ONLINE,
+    ATTR_SENSITIVITY,
+    ATTR_IMAGE_WIDTH,
+    ATTR_IMAGE_HEIGHT,
+    SERVICE_SET_RECORDING_MODE,
+    SET_RECORDING_MODE_SCHEMA,
 )
 from .entity import SecuritySpyEntity
 
@@ -30,7 +35,7 @@ _LOGGER = logging.getLogger(__name__)
 async def async_setup_entry(
     hass: HomeAssistantType, entry: ConfigEntry, async_add_entities
 ) -> None:
-    """Discover cameras on a Unifi Protect NVR."""
+    """Discover cameras on a SecuritySpy NVR."""
     secspy = hass.data[DOMAIN][entry.entry_id]["secspy"]
     coordinator = hass.data[DOMAIN][entry.entry_id]["coordinator"]
     nvr = hass.data[DOMAIN][entry.entry_id]["nvr"]
@@ -43,21 +48,13 @@ async def async_setup_entry(
         [SecuritySpyCamera(secspy, coordinator, nvr, camera) for camera in cameras]
     )
 
-    # platform = entity_platform.current_platform.get()
+    platform = entity_platform.current_platform.get()
 
-    # platform.async_register_entity_service(
-    #     SERVICE_SET_RECORDING_MODE,
-    #     SET_RECORDING_MODE_SCHEMA,
-    #     "async_set_recording_mode",
-    # )
-
-    # platform.async_register_entity_service(
-    #     SERVICE_SET_IR_MODE, SET_IR_MODE_SCHEMA, "async_set_ir_mode"
-    # )
-
-    # platform.async_register_entity_service(
-    #     SERVICE_SAVE_THUMBNAIL, SAVE_THUMBNAIL_SCHEMA, "async_save_thumbnail"
-    # )
+    platform.async_register_entity_service(
+        SERVICE_SET_RECORDING_MODE,
+        SET_RECORDING_MODE_SCHEMA,
+        "async_set_recording_mode",
+    )
 
     return True
 
@@ -103,7 +100,7 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
         """Return true if the device is recording."""
         return (
             True
-            if self._camera_data["recording_mode"] != "never"
+            if self._camera_data["recording_mode"] != RECORDING_MODE_NEVER
             and self._camera_data["online"]
             else False
         )
@@ -115,34 +112,14 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
         return {
             ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
             ATTR_ONLINE: self._camera_data["online"],
+            ATTR_SENSITIVITY: self._camera_data["mdsensitivity"],
+            ATTR_IMAGE_WIDTH: self._camera_data["image_width"],
+            ATTR_IMAGE_HEIGHT: self._camera_data["image_height"],
         }
 
-    # async def async_set_recording_mode(self, recording_mode):
-    #     """Set Camera Recording Mode."""
-    #     await self.upv_object.set_camera_recording(self._camera_id, recording_mode)
-
-    # async def async_save_thumbnail(self, filename, image_width):
-    #     """Save Thumbnail Image."""
-
-    #     if not self.hass.config.is_allowed_path(filename):
-    #         _LOGGER.error("Can't write %s, no access to path!", filename)
-    #         return
-
-    #     image = await self.upv_object.get_thumbnail(self._camera_id, image_width)
-    #     if image is None:
-    #         _LOGGER.error("Last recording not found for Camera %s", self.name)
-    #         return
-
-    #     def _write_image(to_file, image_data):
-    #         """Executor helper to write image."""
-    #         with open(to_file, "wb") as img_file:
-    #             img_file.write(image_data)
-    #             _LOGGER.debug("Thumbnail Image written to %s", filename)
-
-    #     try:
-    #         await self.hass.async_add_executor_job(_write_image, filename, image)
-    #     except OSError as err:
-    #         _LOGGER.error("Can't write image to file: %s", err)
+    async def async_set_recording_mode(self, recording_mode):
+        """Set Camera Recording Mode."""
+        await self.secspy.set_recording_mode(self._camera_id, recording_mode)
 
     async def async_update(self):
         """Update the entity.

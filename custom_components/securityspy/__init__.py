@@ -18,7 +18,7 @@ from aiohttp.client_exceptions import ServerDisconnectedError
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.exceptions import ConfigEntryNotReady
-from homeassistant.helpers.aiohttp_client import async_create_clientsession
+from homeassistant.helpers import aiohttp_client
 from homeassistant.helpers.typing import ConfigType, HomeAssistantType
 from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.dispatcher import (
@@ -67,7 +67,7 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool
             },
         )
 
-    session = async_create_clientsession(hass)
+    session = aiohttp_client.async_get_clientsession(hass)
     securityspy = SecuritySpyServer(
         entry.data[CONF_HOST],
         entry.data[CONF_PORT],
@@ -86,7 +86,7 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool
         hass,
         _LOGGER,
         name=DOMAIN,
-        update_method=securityspy.async_get_cameras,
+        update_method=securityspy.update,
         update_interval=timedelta(seconds=update_interval),
     )
 

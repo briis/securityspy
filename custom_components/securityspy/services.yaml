@@ -6,4 +6,4 @@ set_recording_mode:
       example: 'camera.outdoor'
     recording_mode:
       description: '(Optional) Valid options are: always = Always Recording, motion = Only record on motion, never = stop recording. Default value is: motion'
-      example: always
+      example: motion
