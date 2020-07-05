@@ -1,5 +1,6 @@
 from homeassistant.helpers.entity import Entity
 import homeassistant.helpers.device_registry as dr
+from homeassistant.core import callback
 
 from .const import DOMAIN, DEFAULT_BRAND
 
