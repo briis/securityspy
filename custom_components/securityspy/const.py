@@ -46,4 +46,5 @@ SET_RECORDING_MODE_SCHEMA = vol.Schema(
 SECURITYSPY_PLATFORMS = [
     "camera",
     "binary_sensor",
+    "switch",
 ]
