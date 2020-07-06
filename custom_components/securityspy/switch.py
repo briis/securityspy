@@ -21,7 +21,7 @@ from .const import (
 _LOGGER = logging.getLogger(__name__)
 
 SWITCH_TYPES = {
-    "record_motion": ["Record Motion", "video-outline", "record_motion"],
+    "record_motion": ["Record Motion", "motion-sensor", "record_motion"],
     "record_always": ["Record Always", "video", "record_always"],
 }
 
@@ -42,7 +42,7 @@ async def async_setup_entry(
             switches.append(
                 SecuritySpySwitch(secspy, coordinator, nvr, camera, switch,)
             )
-            _LOGGER.debug("UNIFIPROTECT SWITCH CREATED: %s", switch)
+            _LOGGER.debug("SECURITYSPY SWITCH CREATED: %s", switch)
 
     async_add_entities(switches, True)
 
