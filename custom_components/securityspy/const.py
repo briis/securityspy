@@ -27,6 +27,7 @@ ATTR_ONLINE = "online"
 ATTR_SENSITIVITY = "motion_sensitivity"
 ATTR_IMAGE_WIDTH = "image_width"
 ATTR_IMAGE_HEIGHT = "image_height"
+ATTR_BRAND = "brand"
 
 VALID_RECORDING_MODES = [
     RECORDING_MODE_ALWAYS,

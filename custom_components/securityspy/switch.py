@@ -16,6 +16,7 @@ from .const import (
     DOMAIN,
     DEFAULT_ATTRIBUTION,
     DEFAULT_BRAND,
+    ATTR_BRAND,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -91,6 +92,7 @@ class SecuritySpySwitch(SecuritySpyEntity, SwitchEntity):
         """Return the device state attributes."""
         return {
             ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
+            ATTR_BRAND: DEFAULT_BRAND,
         }
 
     async def async_turn_on(self, **kwargs):
