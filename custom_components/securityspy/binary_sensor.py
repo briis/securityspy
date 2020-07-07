@@ -56,7 +56,6 @@ class SecuritySpyBinarySensor(SecuritySpyEntity, BinarySensorEntity):
         super().__init__(secspy, coordinator, nvr, camera_id, sensor_type)
         self._name = f"{sensor_type.capitalize()} {self._camera_data['name']}"
         self._device_class = sensor_type
-        self._data = None
 
     @property
     def name(self):
@@ -66,15 +65,7 @@ class SecuritySpyBinarySensor(SecuritySpyEntity, BinarySensorEntity):
     @property
     def is_on(self):
         """Return true if the binary sensor is on."""
-        return False
-        # if self._data:
-        #     if self._data[self._camera_id]["event_type"] in MOTION_TRIGGERS:
-        #         # _LOGGER.debug(
-        #         #     f"CAM {self._data[self._camera_id]['name']} MOTION: {self._data[self._camera_id]['is_motion']}"
-        #         # )
-        #         return bool(self._data[self._camera_id]["is_motion"])
-        # else:
-        #     return False
+        return self._camera_data["is_motion"]
 
     @property
     def device_class(self):
