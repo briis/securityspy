@@ -9,7 +9,6 @@ There is support for the following devices types within Home Assistant:
 * Camera
 * Sensor
 * Switch
-* --Binary Sensor
 
 **NOTE**: There is now a working version that will setup the Cameras defined on the SecuritySpy Server, and some switches to to turn on/off the Motion Detection, plus a sensor for each camera showing what Recording Mode the Camera is in.
 At present there is NOT a Binary Motion Sensor pr. camera. I am working on this, but it is a bit more tricky.
