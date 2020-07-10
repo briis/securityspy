@@ -92,4 +92,5 @@ class SecuritySpySensor(SecuritySpyEntity, Entity):
         """Return the device state attributes."""
         return {
             ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
+            ATTR_BRAND: DEFAULT_BRAND,
         }
