@@ -3,7 +3,7 @@
     "render_readme": true,
     "homeassistant": "0.110.0",
     "domains": [
-        "binary_sensor",
+        "sensor",
         "camera",
         "switch"
     ],
