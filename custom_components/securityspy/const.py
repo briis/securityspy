@@ -25,6 +25,11 @@ ATTR_SENSITIVITY = "motion_sensitivity"
 ATTR_IMAGE_WIDTH = "image_width"
 ATTR_IMAGE_HEIGHT = "image_height"
 ATTR_BRAND = "brand"
+ATTR_EVENT_LENGTH = "event_length"
+ATTR_EVENT_OBJECT = "event_object"
+
+DEVICE_TYPE_DOORBELL = "doorbell"
+DEVICE_TYPE_MOTION = "motion"
 
 VALID_RECORDING_MODES = [
     RECORDING_TYPE_MOTION,
@@ -43,7 +48,7 @@ SET_RECORDING_MODE_SCHEMA = vol.Schema(
 
 SECURITYSPY_PLATFORMS = [
     "camera",
-    # "binary_sensor",
+    "binary_sensor",
     # "switch",
     # "sensor",
 ]
