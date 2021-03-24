@@ -72,7 +72,7 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_create_entry(
             title=server_name,
             data={
-                CONF_ID: server_name,
+                CONF_ID: unique_id,
                 CONF_HOST: user_input[CONF_HOST],
                 CONF_PORT: user_input[CONF_PORT],
                 CONF_USERNAME: user_input.get(CONF_USERNAME),
