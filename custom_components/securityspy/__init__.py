@@ -7,13 +7,9 @@ import asyncio
 from datetime import timedelta
 import logging
 
-from pysecurityspy import (
-    SecuritySpyServer,
-    SecuritySpyEvents,
-    InvalidCredentials,
-    RequestError,
-    ResultError,
-)
+from pysecspy.secspy_server import SecSpyServer
+from pysecspy.errors import InvalidCredentials, RequestError, ResultError
+
 from aiohttp.client_exceptions import ServerDisconnectedError
 
 from homeassistant.config_entries import ConfigEntry
@@ -40,7 +36,6 @@ from homeassistant.const import (
 
 from .const import (
     DEFAULT_BRAND,
-    DEFAULT_SCAN_INTERVAL,
     DOMAIN,
     SECURITYSPY_PLATFORMS,
 )
@@ -57,30 +52,19 @@ async def async_setup(hass: HomeAssistantType, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool:
     """Set up the SecuritySpy config entries."""
 
-    if not entry.options:
-        hass.config_entries.async_update_entry(
-            entry,
-            options={
-                CONF_SCAN_INTERVAL: entry.data.get(
-                    CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
-                ),
-            },
-        )
-
     session = aiohttp_client.async_get_clientsession(hass)
-    securityspy = SecuritySpyServer(
+    securityspy = SecSpyServer(
         entry.data[CONF_HOST],
         entry.data[CONF_PORT],
         entry.data[CONF_USERNAME],
         entry.data[CONF_PASSWORD],
-        False,
         session,
     )
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = securityspy
     _LOGGER.debug("Connect to SecuritySpy")
 
-    update_interval = entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
+    update_interval = entry.options.get(CONF_SCAN_INTERVAL, 10)
 
     coordinator = DataUpdateCoordinator(
         hass,

@@ -4,7 +4,6 @@ import voluptuous as vol
 from homeassistant.helpers import config_validation as cv
 from homeassistant.const import (
     ATTR_ENTITY_ID,
-    CONF_FILENAME,
 )
 from pysecspy.const import (
     RECORDING_TYPE_MOTION,

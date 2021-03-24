@@ -6,17 +6,15 @@ from homeassistant.components.switch import SwitchEntity
 from homeassistant.const import ATTR_ATTRIBUTION
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.typing import HomeAssistantType
-from pysecurityspy import (
-    RECORDING_MODE_ALWAYS,
-    RECORDING_MODE_MOTION,
-    RECORDING_MODE_NEVER,
-)
 from .entity import SecuritySpyEntity
 from .const import (
     DOMAIN,
     DEFAULT_ATTRIBUTION,
     DEFAULT_BRAND,
     ATTR_BRAND,
+    RECORDING_TYPE_CONTINUOUS,
+    RECORDING_TYPE_MOTION,
+    RECORDING_TYPE_OFF,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -41,7 +39,13 @@ async def async_setup_entry(
     for switch in SWITCH_TYPES:
         for camera in coordinator.data:
             switches.append(
-                SecuritySpySwitch(secspy, coordinator, nvr, camera, switch,)
+                SecuritySpySwitch(
+                    secspy,
+                    coordinator,
+                    nvr,
+                    camera,
+                    switch,
+                )
             )
             _LOGGER.debug("SECURITYSPY SWITCH CREATED: %s", switch)
 
@@ -71,13 +75,13 @@ class SecuritySpySwitch(SecuritySpyEntity, SwitchEntity):
         if self._switch_type == "record_motion":
             enabled = (
                 True
-                if self._camera_data["recording_mode"] == RECORDING_MODE_MOTION
+                if self._camera_data["recording_mode"] == RECORDING_TYPE_MOTION
                 else False
             )
         else:
             enabled = (
                 True
-                if self._camera_data["recording_mode"] == RECORDING_MODE_ALWAYS
+                if self._camera_data["recording_mode"] == RECORDING_TYPE_CONTINUOUS
                 else False
             )
         return enabled
@@ -99,16 +103,18 @@ class SecuritySpySwitch(SecuritySpyEntity, SwitchEntity):
         """Turn the device on."""
         if self._switch_type == "record_motion":
             _LOGGER.debug("Turning on Motion Detection")
-            await self.secspy.set_recording_mode(self._camera_id, RECORDING_MODE_MOTION)
+            await self.secspy.set_recording_mode(self._camera_id, RECORDING_TYPE_MOTION)
         else:
             _LOGGER.debug("Turning on Constant Recording")
-            await self.secspy.set_recording_mode(self._camera_id, RECORDING_MODE_ALWAYS)
+            await self.secspy.set_recording_mode(
+                self._camera_id, RECORDING_TYPE_CONTINUOUS
+            )
 
         await self.coordinator.async_request_refresh()
 
     async def async_turn_off(self, **kwargs):
         """Turn the device off."""
         _LOGGER.debug("Turning off Recording")
-        await self.secspy.set_recording_mode(self._camera_id, RECORDING_MODE_NEVER)
+        await self.secspy.set_recording_mode(self._camera_id, RECORDING_TYPE_OFF)
 
         await self.coordinator.async_request_refresh()

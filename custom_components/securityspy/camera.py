@@ -6,12 +6,6 @@ from homeassistant.const import (
     ATTR_ATTRIBUTION,
     ATTR_LAST_TRIP_TIME,
 )
-from pysecurityspy import (
-    RECORDING_MODE_ALWAYS,
-    RECORDING_MODE_MOTION,
-    RECORDING_MODE_ACTION,
-    RECORDING_MODE_NEVER,
-)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.typing import HomeAssistantType
 from homeassistant.helpers import entity_platform
@@ -24,6 +18,9 @@ from .const import (
     ATTR_SENSITIVITY,
     ATTR_IMAGE_WIDTH,
     ATTR_IMAGE_HEIGHT,
+    RECORDING_TYPE_CONTINUOUS,
+    RECORDING_TYPE_MOTION,
+    RECORDING_TYPE_OFF,
     SERVICE_SET_RECORDING_MODE,
     SET_RECORDING_MODE_SCHEMA,
 )
@@ -100,7 +97,7 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
         """Return true if the device is recording."""
         return (
             True
-            if self._camera_data["recording_mode"] != RECORDING_MODE_NEVER
+            if self._camera_data["recording_mode"] != RECORDING_TYPE_OFF
             and self._camera_data["online"]
             else False
         )
@@ -130,7 +127,7 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
     async def async_enable_motion_detection(self):
         """Enable motion detection in camera."""
         ret = await self.secspy.set_recording_mode(
-            self._camera_id, RECORDING_MODE_MOTION
+            self._camera_id, RECORDING_TYPE_MOTION
         )
         if not ret:
             return
@@ -138,9 +135,7 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
 
     async def async_disable_motion_detection(self):
         """Disable motion detection in camera."""
-        ret = await self.secspy.set_recording_mode(
-            self._camera_id, RECORDING_MODE_NEVER
-        )
+        ret = await self.secspy.set_recording_mode(self._camera_id, RECORDING_TYPE_OFF)
         if not ret:
             return
         _LOGGER.debug("Motion Detection Disabled for Camera: %s", self._name)
