@@ -73,7 +73,7 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool
 
     hass.data[DOMAIN][entry.entry_id] = {
         "secspy_data": secspy_data,
-        "upv": securityspy,
+        "nvr": securityspy,
         "server_info": server_info,
         "update_listener": update_listener,
     }
