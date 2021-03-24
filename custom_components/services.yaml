@@ -1,0 +1,24 @@
+set_recording_mode:
+  name: Set Recording Mode
+  description: "Set recording mode for the camera"
+  fields:
+    entity_id:
+      name: Entity ID
+      description: string (required) camera to set recording mode mode for
+      example: "camera.outdoor"
+      required: true
+      selector:
+        entity:
+          integration: securityspy
+          domain: camera
+    recording_mode:
+      name: Recording Mode
+      description: "(Required) Valid options are: continuous = Continuous Recording, on_motion = Only record on motion, off = stop recording."
+      required: true
+      example: on_motion
+      selector:
+        select:
+          options:
+            - "continuous"
+            - "on_motion"
+            - "off"
