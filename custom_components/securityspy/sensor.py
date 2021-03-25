@@ -22,7 +22,7 @@ SENSOR_TYPES = {
     "motion_recording": [
         "Motion Recording",
         None,
-        ["video-outline,video-off-outline"],
+        ["video-outline", "video-off-outline"],
         DEVICES_WITH_CAMERA,
     ],
 }
@@ -50,7 +50,10 @@ async def async_setup_entry(
     sensors = []
     for sensor, sensor_type in SENSOR_TYPES.items():
         for device_id in secspy_data.data:
-            if secspy_data.data[device_id].get("type") in sensor_type[_SENSOR_MODEL]:
+            if (
+                secspy_data.data[device_id].get("type").lower()
+                in sensor_type[_SENSOR_MODEL]
+            ):
                 sensors.append(
                     SecuritySpySensor(
                         secspy_object, secspy_data, server_info, device_id, sensor
