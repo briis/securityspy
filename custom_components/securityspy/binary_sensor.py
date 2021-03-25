@@ -89,4 +89,5 @@ class SecuritySpyBinarySensor(SecuritySpyEntity, BinarySensorEntity):
             ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
             ATTR_LAST_TRIP_TIME: self._device_data["last_motion"],
             ATTR_EVENT_LENGTH: self._device_data["event_length"],
+            ATTR_EVENT_OBJECT: self._device_data["event_object"],
         }
