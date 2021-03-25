@@ -28,8 +28,11 @@ ATTR_BRAND = "brand"
 ATTR_EVENT_LENGTH = "event_length"
 ATTR_EVENT_OBJECT = "event_object"
 
+DEVICE_TYPE_CAMERA = "camera"
 DEVICE_TYPE_DOORBELL = "doorbell"
 DEVICE_TYPE_MOTION = "motion"
+
+DEVICES_WITH_CAMERA = (DEVICE_TYPE_CAMERA, DEVICE_TYPE_DOORBELL)
 
 VALID_RECORDING_MODES = [
     RECORDING_TYPE_MOTION,
@@ -50,5 +53,5 @@ SECURITYSPY_PLATFORMS = [
     "camera",
     "binary_sensor",
     "switch",
-    # "sensor",
+    "sensor",
 ]
