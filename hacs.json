@@ -1,11 +1,12 @@
 {
     "name": "SecuritySpy for Home Assistant",
     "render_readme": true,
-    "homeassistant": "0.110.0",
+    "homeassistant": "2021.3.0",
     "domains": [
         "sensor",
+        "binary_sensor",
         "camera",
         "switch"
     ],
-    "iot_class": "Local Polling"
+    "iot_class": "Local Push"
 }
