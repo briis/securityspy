@@ -1,19 +1,15 @@
 # SecuritySpy for Home Assistant
 ![GitHub release](https://img.shields.io/github/release/briis/securityspy.svg?style=flat-square) [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg?style=flat-square)](https://github.com/custom-components/hacs)
 
-## NOTE: Project is currently on Hold. I don't have the time to support or develop on this at the moment. Hopefully one day, I can return and finish this.
-
 This is a Home Assistant Integration for [Ben Softwares](https://www.bensoftware.com) SecuritySpy Surveillance system.
 
-Basically what this does, is integrating the Camera feeds from SecuritySpy in to Home Assistant, adds switches to adjust recording settings and adds Binary Motion Sensors to show if motion has occured.
+Basically what this does, is integrating the Camera feeds from SecuritySpy in to Home Assistant, adds switches to adjust recording settings and adds Binary Motion Sensors to show if motion has occured. This project uses a *local push model* to get data from the SecuritySpy Server.
 
 There is support for the following devices types within Home Assistant:
 * Camera
+* Binary Sensor
 * Sensor
 * Switch
-
-**NOTE**: There is now a working version that will setup the Cameras defined on the SecuritySpy Server, and some switches to to turn on/off the Motion Detection, plus a sensor for each camera showing what Recording Mode the Camera is in.
-At present there is NOT a Binary Motion Sensor pr. camera. I am working on this, but it is a bit more tricky.
 
 Please use the *Issues* tab on the repository, to report any errors you may find.
 
@@ -27,7 +23,7 @@ Before you install this Integration you need to ensure that the following settin
 
 ![Web Server Setup](https://github.com/briis/securityspy/blob/master/support_files/secspy_webserver_sm.png) ![User Setup](https://github.com/briis/securityspy/blob/master/support_files/secspy_users_sm.png)
 
-**Note** This Integration is only guaranteed to work on version 5.2.2 and greater of SecuritySpy. The integration is using some features from the AI implementation in V5 and some additions to the Event Stream that were introduced in V5.2.2.
+**Note** This Integration is only guaranteed to work on version 5.3.2 and greater of SecuritySpy.
 
 ## Installation
 
@@ -43,14 +39,17 @@ Then, drop the following files into that folder:
 
 ```yaml
 __init__.py
-manifest.json
+binary_sensor.py
+camera.py
 config_flow.py
 const.py
+data.py
 entity.py
-camera.py
-switch.py
+manifest.json
+sensor.py
 services.yaml
 strings.json
+switch.py
 <translations> (Copy the directory and the files within it)
 ```
 

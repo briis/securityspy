@@ -6,10 +6,9 @@
                 "description": "Set up SecuritySpy to monitor cameras and sensors.",
                 "data": {
                     "host": "IP Address of SecuritySpy Server",
-                    "port": "Port Number",
+                    "port": "Http Port Number",
                     "username": "Username",
-                    "password": "Password",
-                    "scan_interval": "Scan interval (Pull slider to de- or increase time)"
+                    "password": "Password"
                 }
             }
         },
@@ -25,7 +24,10 @@
         "step": {
             "init": {
                 "data": {
-                    "scan_interval": "Scan interval (Pull slider to de- or increase time)"
+                    "host": "IP Address of SecuritySpy Server",
+                    "port": "Http Port Number",
+                    "username": "Username",
+                    "password": "Password"
                 }
             }
         }

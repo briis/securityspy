@@ -1,49 +1,32 @@
-"""
-    SecuritySpy Integration
-    Author: Bjarne Riis
-    Github: @briis
-"""
+"""SecuritySpy Platform."""
+
 import asyncio
 from datetime import timedelta
 import logging
 
-from pysecurityspy import (
-    SecuritySpyServer,
-    SecuritySpyEvents,
-    InvalidCredentials,
-    RequestError,
-    ResultError,
-)
 from aiohttp.client_exceptions import ServerDisconnectedError
-
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.exceptions import ConfigEntryNotReady
-from homeassistant.helpers import aiohttp_client
-from homeassistant.helpers.typing import ConfigType, HomeAssistantType
-from homeassistant.helpers.event import async_track_time_interval
-from homeassistant.helpers.dispatcher import (
-    async_dispatcher_connect,
-    async_dispatcher_send,
-)
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
-import homeassistant.helpers.device_registry as dr
-
 from homeassistant.const import (
-    ATTR_ATTRIBUTION,
     CONF_ID,
     CONF_HOST,
     CONF_PORT,
     CONF_USERNAME,
     CONF_PASSWORD,
-    CONF_SCAN_INTERVAL,
 )
+from homeassistant.exceptions import ConfigEntryNotReady
+from homeassistant.helpers.aiohttp_client import async_create_clientsession
+import homeassistant.helpers.device_registry as dr
+from homeassistant.helpers.typing import ConfigType, HomeAssistantType
+from pysecspy.errors import InvalidCredentials, RequestError, ResultError
+from pysecspy.secspy_server import SecSpyServer
+from pysecspy.const import SERVER_ID
 
 from .const import (
     DEFAULT_BRAND,
-    DEFAULT_SCAN_INTERVAL,
     DOMAIN,
     SECURITYSPY_PLATFORMS,
 )
+from .data import SecuritySpyData
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -57,65 +40,50 @@ async def async_setup(hass: HomeAssistantType, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool:
     """Set up the SecuritySpy config entries."""
 
-    if not entry.options:
-        hass.config_entries.async_update_entry(
-            entry,
-            options={
-                CONF_SCAN_INTERVAL: entry.data.get(
-                    CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
-                ),
-            },
-        )
-
-    session = aiohttp_client.async_get_clientsession(hass)
-    securityspy = SecuritySpyServer(
+    session = async_create_clientsession(hass)
+    securityspy = SecSpyServer(
+        session,
         entry.data[CONF_HOST],
         entry.data[CONF_PORT],
         entry.data[CONF_USERNAME],
         entry.data[CONF_PASSWORD],
-        False,
-        session,
     )
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = securityspy
     _LOGGER.debug("Connect to SecuritySpy")
 
-    update_interval = entry.options.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)
-
-    coordinator = DataUpdateCoordinator(
-        hass,
-        _LOGGER,
-        name=DOMAIN,
-        update_method=securityspy.update,
-        update_interval=timedelta(seconds=update_interval),
-    )
+    secspy_data = SecuritySpyData(hass, securityspy, timedelta(seconds=2))
 
     try:
-        nvr = await securityspy.get_server_information()
-    except InvalidCredentials:
-        _LOGGER.error(
-            "Could not Authorize against SecuritySpy. Please reinstall the Integration."
-        )
+        server_info = await securityspy.get_server_information()
+    except InvalidCredentials as unauthex:
+        _LOGGER.error("Could not authorize against SecuritySpy. Error: %s.", unauthex)
         return
-    except (RequestError, ServerDisconnectedError):
+    except (RequestError, ServerDisconnectedError) as notreadyerror:
+        raise ConfigEntryNotReady from notreadyerror
+
+    if entry.unique_id is None:
+        hass.config_entries.async_update_entry(entry, unique_id=server_info[SERVER_ID])
+
+    await secspy_data.async_setup()
+    if not secspy_data.last_update_success:
         raise ConfigEntryNotReady
 
-    await coordinator.async_refresh()
+    update_listener = entry.add_update_listener(_async_options_updated)
+
     hass.data[DOMAIN][entry.entry_id] = {
-        "coordinator": coordinator,
-        "secspy": securityspy,
-        "nvr": nvr,
+        "secspy_data": secspy_data,
+        "nvr": securityspy,
+        "server_info": server_info,
+        "update_listener": update_listener,
     }
 
-    await _async_get_or_create_nvr_device_in_registry(hass, entry, nvr)
+    await _async_get_or_create_nvr_device_in_registry(hass, entry, server_info)
 
     for platform in SECURITYSPY_PLATFORMS:
         hass.async_create_task(
             hass.config_entries.async_forward_entry_setup(entry, platform)
         )
-
-    if not entry.update_listeners:
-        entry.add_update_listener(async_update_options)
 
     return True
 
@@ -126,16 +94,16 @@ async def _async_get_or_create_nvr_device_in_registry(
     device_registry = await dr.async_get_registry(hass)
     device_registry.async_get_or_create(
         config_entry_id=entry.entry_id,
-        connections={(dr.CONNECTION_NETWORK_MAC, nvr["host"])},
-        identifiers={(DOMAIN, nvr["host"])},
+        connections={(dr.CONNECTION_NETWORK_MAC, nvr["server_id"])},
+        identifiers={(DOMAIN, nvr["server_id"])},
         manufacturer=DEFAULT_BRAND,
         name=entry.data[CONF_ID],
-        model=nvr["name"],
-        sw_version=nvr["version"],
+        model="No Model",
+        sw_version=nvr["server_version"],
     )
 
 
-async def async_update_options(hass: HomeAssistantType, entry: ConfigEntry):
+async def _async_options_updated(hass: HomeAssistantType, entry: ConfigEntry):
     """Update options."""
     await hass.config_entries.async_reload(entry.entry_id)
 
@@ -152,6 +120,9 @@ async def async_unload_entry(hass: HomeAssistantType, entry: ConfigEntry) -> boo
     )
 
     if unload_ok:
+        entry_data = hass.data[DOMAIN][entry.entry_id]
+        entry_data["update_listener"]()
+        await entry_data["secspy_data"].async_stop()
         hass.data[DOMAIN].pop(entry.entry_id)
 
     return unload_ok

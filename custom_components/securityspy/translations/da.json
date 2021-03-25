@@ -11,10 +11,9 @@
             "user": {
                 "data": {
                     "host": "IP adresse på SecuritySpy Serveren",
-                    "port": "Port nummer",
+                    "port": "Http Port nummer",
                     "username": "Brugernavn",
-                    "password": "Kodeord",
-                    "scan_interval": "Opdaterings frekvens"
+                    "password": "Kodeord"
                 },
                 "description": "Konfigurer SecuritySpy for at monitorere kameraer og sensorer.",
                 "title": "SecuritySpy"
@@ -25,7 +24,10 @@
         "step": {
             "init": {
                 "data": {
-                    "scan_interval": "Opdaterings frekvens"
+                    "host": "IP adresse på SecuritySpy Serveren",
+                    "port": "Http Port nummer",
+                    "username": "Brugernavn",
+                    "password": "Kodeord"
                 }
             }
         }
