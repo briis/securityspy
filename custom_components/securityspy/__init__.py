@@ -98,7 +98,7 @@ async def _async_get_or_create_nvr_device_in_registry(
         identifiers={(DOMAIN, nvr["server_id"])},
         manufacturer=DEFAULT_BRAND,
         name=entry.data[CONF_ID],
-        model="No Model",
+        model="Max OSX Computer",
         sw_version=nvr["server_version"],
     )
 

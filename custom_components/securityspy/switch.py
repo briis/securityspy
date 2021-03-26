@@ -26,8 +26,18 @@ _SWITCH_TYPE = 2
 _SWITCH_REQUIRES = 3
 
 SWITCH_TYPES = {
-    "record_motion": ["Record Motion", "motion-sensor", RECORDING_TYPE_MOTION],
-    "record_continuous": ["Record Continuous", "video", RECORDING_TYPE_CONTINUOUS],
+    RECORDING_TYPE_MOTION: [
+        "Record Motion",
+        "motion-sensor",
+        RECORDING_TYPE_MOTION,
+        None,
+    ],
+    RECORDING_TYPE_CONTINUOUS: [
+        "Record Continuous",
+        "video",
+        RECORDING_TYPE_CONTINUOUS,
+        None,
+    ],
 }
 
 
@@ -44,7 +54,13 @@ async def async_setup_entry(
 
     switches = []
     for switch, switch_type in SWITCH_TYPES.items():
+        required_field = switch_type[_SWITCH_REQUIRES]
+
         for device_id in secspy_data.data:
+            # Only Add Switches if Device supports it.
+            if required_field and not secspy_data.data[device_id].get(required_field):
+                continue
+
             switches.append(
                 SecuritySpySwitch(
                     secspy_object, secspy_data, server_info, device_id, switch

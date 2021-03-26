@@ -65,6 +65,8 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
 
         unique_id = server_info[SERVER_ID]
         server_name = server_info[SERVER_NAME]
+        server_ip_address = server_info["server_ip_address"]
+        id_name = f"{server_name} ({server_ip_address})"
 
         await self.async_set_unique_id(unique_id)
         self._abort_if_unique_id_configured()
@@ -72,7 +74,7 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_create_entry(
             title=server_name,
             data={
-                CONF_ID: unique_id,
+                CONF_ID: id_name,
                 CONF_HOST: user_input[CONF_HOST],
                 CONF_PORT: user_input[CONF_PORT],
                 CONF_USERNAME: user_input.get(CONF_USERNAME),
