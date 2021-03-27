@@ -41,7 +41,7 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool
     """Set up the SecuritySpy config entries."""
 
     session = async_create_clientsession(hass)
-    securityspy = SecSpyServer(
+    securityspyserver = SecSpyServer(
         session,
         entry.data[CONF_HOST],
         entry.data[CONF_PORT],
@@ -49,13 +49,13 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool
         entry.data[CONF_PASSWORD],
     )
 
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = securityspy
+    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = securityspyserver
     _LOGGER.debug("Connect to SecuritySpy")
 
-    secspy_data = SecuritySpyData(hass, securityspy, timedelta(seconds=2))
+    secspy_data = SecuritySpyData(hass, securityspyserver, timedelta(seconds=2))
 
     try:
-        server_info = await securityspy.get_server_information()
+        server_info = await securityspyserver.get_server_information()
     except InvalidCredentials as unauthex:
         _LOGGER.error("Could not authorize against SecuritySpy. Error: %s.", unauthex)
         return
@@ -73,7 +73,7 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool
 
     hass.data[DOMAIN][entry.entry_id] = {
         "secspy_data": secspy_data,
-        "nvr": securityspy,
+        "nvr": securityspyserver,
         "server_info": server_info,
         "update_listener": update_listener,
     }
