@@ -56,9 +56,12 @@ class SecuritySpyData:
     @callback
     def _async_process_updates(self, updates):
         """Process update from the securityspy data."""
-        for device_id, data in updates.items():
-            self.data[device_id] = data
-            self.async_signal_device_id_update(device_id)
+        if isinstance(updates, dict):
+            for device_id, data in updates.items():
+                self.data[device_id] = data
+                self.async_signal_device_id_update(device_id)
+        else:
+            _LOGGER.debug("TYPES OF UPDATES: %s", type(updates))
 
     @callback
     def async_subscribe_device_id(self, device_id, update_callback):
