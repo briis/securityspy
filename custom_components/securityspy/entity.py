@@ -1,7 +1,12 @@
+"""Shared Entity definition for SecurotySpy Integration."""
+import logging
+
 import homeassistant.helpers.device_registry as dr
 from homeassistant.helpers.entity import Entity
 
 from .const import DEFAULT_BRAND, DOMAIN
+
+_LOGGER = logging.getLogger(__name__)
 
 
 class SecuritySpyEntity(Entity):
@@ -23,9 +28,9 @@ class SecuritySpyEntity(Entity):
         self._device_type = self._device_data["type"]
         self._model = self._device_data["model"]
         if self._sensor_type is None:
-            self._unique_id = f"{self._device_id}_{self._mac}"
+            self._unique_id = f"{self._device_id}_{self._server_id}"
         else:
-            self._unique_id = f"{self._sensor_type}_{self._mac}"
+            self._unique_id = f"{self._sensor_type}_{self._server_id}_{self._device_id}"
 
     @property
     def should_poll(self):
@@ -49,12 +54,13 @@ class SecuritySpyEntity(Entity):
             "via_device": (DOMAIN, self._server_id),
         }
 
-    async def async_update(self):
-        """Update the entity.
+    # async def async_update(self):
+    #     """Update the entity.
 
-        Only used by the generic entity update service.
-        """
-        await self.secspy_data.async_refresh()
+    #     Only used by the generic entity update service.
+    #     Which is not used anymore due to Push rewrite.
+    #     """
+    #     await self.secspy_data.async_refresh()
 
     @property
     def available(self):

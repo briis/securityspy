@@ -13,13 +13,8 @@ from .const import (
     DEFAULT_ATTRIBUTION,
     DEFAULT_BRAND,
     ATTR_ONLINE,
-    ATTR_SENSITIVITY,
-    ATTR_IMAGE_WIDTH,
-    ATTR_IMAGE_HEIGHT,
-    RECORDING_TYPE_CONTINUOUS,
     RECORDING_TYPE_MOTION,
     RECORDING_TYPE_OFF,
-    RECORDING_TYPE_CONTINUOUS,
     SERVICE_SET_RECORDING_MODE,
     SET_RECORDING_MODE_SCHEMA,
 )
@@ -44,6 +39,8 @@ async def async_setup_entry(
         cameras.append(
             SecuritySpyCamera(secspy_object, secspy_data, server_info, camera_id)
         )
+        _LOGGER.debug("SECURITYSPY CAMERA CREATED: %s", camera_id)
+
     async_add_entities(cameras)
 
     platform = entity_platform.current_platform.get()

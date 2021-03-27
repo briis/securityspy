@@ -26,13 +26,13 @@ _SWITCH_TYPE = 2
 _SWITCH_REQUIRES = 3
 
 SWITCH_TYPES = {
-    RECORDING_TYPE_MOTION: [
+    "record_motion": [
         "Record Motion",
         "motion-sensor",
         RECORDING_TYPE_MOTION,
         None,
     ],
-    RECORDING_TYPE_CONTINUOUS: [
+    "record_continuous": [
         "Record Continuous",
         "video",
         RECORDING_TYPE_CONTINUOUS,
@@ -113,7 +113,7 @@ class SecuritySpySwitch(SecuritySpyEntity, SwitchEntity):
     async def async_turn_on(self, **kwargs):
         """Turn the device on."""
         if self._switch_type == RECORDING_TYPE_MOTION:
-            _LOGGER.debug("Turning on Motion Recordin")
+            _LOGGER.debug("Turning on Motion Recording")
             await self.secspy.set_camera_recording(
                 self._device_id, RECORDING_TYPE_MOTION
             )
