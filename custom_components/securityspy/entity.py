@@ -54,14 +54,6 @@ class SecuritySpyEntity(Entity):
             "via_device": (DOMAIN, self._server_id),
         }
 
-    # async def async_update(self):
-    #     """Update the entity.
-
-    #     Only used by the generic entity update service.
-    #     Which is not used anymore due to Push rewrite.
-    #     """
-    #     await self.secspy_data.async_refresh()
-
     @property
     def available(self):
         """Return if entity is available."""
