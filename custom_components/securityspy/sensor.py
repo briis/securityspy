@@ -11,8 +11,10 @@ from .const import (
     ATTR_BRAND,
     DEFAULT_ATTRIBUTION,
     DEFAULT_BRAND,
-    DEVICES_WITH_CAMERA,
     DOMAIN,
+    RECORDING_TYPE_ACTION,
+    RECORDING_TYPE_CONTINUOUS,
+    RECORDING_TYPE_MOTION,
     RECORDING_TYPE_OFF,
 )
 
@@ -23,14 +25,26 @@ SENSOR_TYPES = {
         "Motion Recording",
         None,
         ["video-outline", "video-off-outline"],
-        DEVICES_WITH_CAMERA,
+        RECORDING_TYPE_MOTION,
+    ],
+    "continuous_recording": [
+        "Continuous Recording",
+        None,
+        ["video-outline", "video-off-outline"],
+        RECORDING_TYPE_CONTINUOUS,
+    ],
+    "actions": [
+        "Actions Enabled",
+        None,
+        ["script-text-play", "script-text"],
+        RECORDING_TYPE_ACTION,
     ],
 }
 
 _SENSOR_NAME = 0
 _SENSOR_UNITS = 1
 _SENSOR_ICONS = 2
-_SENSOR_MODEL = 3
+_SENSOR_TYPE = 3
 
 _ICON_ON = 0
 _ICON_OFF = 1
@@ -48,18 +62,24 @@ async def async_setup_entry(
         return
 
     sensors = []
-    for sensor, sensor_type in SENSOR_TYPES.items():
+    for sensor in SENSOR_TYPES:
         for device_id in secspy_data.data:
-            if (
-                secspy_data.data[device_id].get("type").lower()
-                in sensor_type[_SENSOR_MODEL]
-            ):
-                sensors.append(
-                    SecuritySpySensor(
-                        secspy_object, secspy_data, server_info, device_id, sensor
-                    )
+            # if (
+            #     secspy_data.data[device_id].get("type").lower()
+            #     in sensor_type[_SENSOR_MODEL]
+            # ):
+            #     sensors.append(
+            #         SecuritySpySensor(
+            #             secspy_object, secspy_data, server_info, device_id, sensor
+            #         )
+            #     )
+            #     _LOGGER.debug("SECURITYSPY SENSOR CREATED: %s", sensor)
+            sensors.append(
+                SecuritySpySensor(
+                    secspy_object, secspy_data, server_info, device_id, sensor
                 )
-                _LOGGER.debug("SECURITYSPY SENSOR CREATED: %s", sensor)
+            )
+            _LOGGER.debug("SECURITYSPY SENSOR CREATED: %s", sensor)
 
     async_add_entities(sensors)
 
@@ -76,6 +96,7 @@ class SecuritySpySensor(SecuritySpyEntity, Entity):
         self._name = f"{sensor_type[_SENSOR_NAME]} {self._device_data['name']}"
         self._units = sensor_type[_SENSOR_UNITS]
         self._icons = sensor_type[_SENSOR_ICONS]
+        self._sensor_type = sensor_type[_SENSOR_TYPE]
 
     @property
     def name(self):
@@ -85,12 +106,17 @@ class SecuritySpySensor(SecuritySpyEntity, Entity):
     @property
     def state(self):
         """Return the state of the sensor."""
-        return self._device_data["recording_mode"]
+        if self._sensor_type == RECORDING_TYPE_ACTION:
+            return self._device_data["recording_mode_a"]
+        if self._sensor_type == RECORDING_TYPE_CONTINUOUS:
+            return self._device_data["recording_mode_c"]
+        if self._sensor_type == RECORDING_TYPE_MOTION:
+            return self._device_data["recording_mode_m"]
 
     @property
     def icon(self):
         """Icon to use in the frontend, if any."""
-        icon_id = _ICON_ON if self.state != RECORDING_TYPE_OFF else _ICON_OFF
+        icon_id = _ICON_ON if self.state else _ICON_OFF
         return f"mdi:{self._icons[icon_id]}"
 
     @property

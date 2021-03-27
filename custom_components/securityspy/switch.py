@@ -12,6 +12,7 @@ from .const import (
     DEFAULT_ATTRIBUTION,
     DEFAULT_BRAND,
     ATTR_BRAND,
+    RECORDING_TYPE_ACTION,
     RECORDING_TYPE_CONTINUOUS,
     RECORDING_TYPE_MOTION,
     RECORDING_TYPE_OFF,
@@ -26,6 +27,12 @@ _SWITCH_TYPE = 2
 _SWITCH_REQUIRES = 3
 
 SWITCH_TYPES = {
+    "enable_action": [
+        "Actions",
+        "motion-sensor",
+        RECORDING_TYPE_ACTION,
+        None,
+    ],
     "record_motion": [
         "Record Motion",
         "motion-sensor",
@@ -92,10 +99,12 @@ class SecuritySpySwitch(SecuritySpyEntity, SwitchEntity):
     @property
     def is_on(self):
         """Return true if device is on."""
+        if self._switch_type == RECORDING_TYPE_ACTION:
+            return self._device_data["recording_mode_a"]
         if self._switch_type == RECORDING_TYPE_MOTION:
-            return self._device_data["recording_mode"] == RECORDING_TYPE_MOTION
+            return self._device_data["recording_mode_m"]
         if self._switch_type == RECORDING_TYPE_CONTINUOUS:
-            return self._device_data["recording_mode"] == RECORDING_TYPE_CONTINUOUS
+            return self._device_data["recording_mode_c"]
 
     @property
     def icon(self):
@@ -112,15 +121,20 @@ class SecuritySpySwitch(SecuritySpyEntity, SwitchEntity):
 
     async def async_turn_on(self, **kwargs):
         """Turn the device on."""
+        if self._switch_type == RECORDING_TYPE_ACTION:
+            _LOGGER.debug("Turning on Actions")
+            await self.secspy.set_camera_recording(
+                self._device_id, RECORDING_TYPE_ACTION, True
+            )
         if self._switch_type == RECORDING_TYPE_MOTION:
             _LOGGER.debug("Turning on Motion Recording")
             await self.secspy.set_camera_recording(
-                self._device_id, RECORDING_TYPE_MOTION
+                self._device_id, RECORDING_TYPE_MOTION, True
             )
-        else:
+        if self._switch_type == RECORDING_TYPE_CONTINUOUS:
             _LOGGER.debug("Turning on Continuous Recordin")
             await self.secspy.set_camera_recording(
-                self._device_id, RECORDING_TYPE_CONTINUOUS
+                self._device_id, RECORDING_TYPE_CONTINUOUS, True
             )
 
         await self.secspy_data.async_refresh(force_camera_update=True)
@@ -128,6 +142,8 @@ class SecuritySpySwitch(SecuritySpyEntity, SwitchEntity):
     async def async_turn_off(self, **kwargs):
         """Turn the device off."""
         _LOGGER.debug("Turning off Recording")
-        await self.secspy.set_camera_recording(self._device_id, RECORDING_TYPE_OFF)
+        await self.secspy.set_camera_recording(
+            self._device_id, self._switch_type, False
+        )
 
         await self.secspy_data.async_refresh(force_camera_update=True)

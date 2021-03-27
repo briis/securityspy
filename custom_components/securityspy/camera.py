@@ -14,9 +14,8 @@ from .const import (
     DEFAULT_BRAND,
     ATTR_ONLINE,
     RECORDING_TYPE_MOTION,
-    RECORDING_TYPE_OFF,
-    SERVICE_SET_RECORDING_MODE,
-    SET_RECORDING_MODE_SCHEMA,
+    SERVICE_SET_MODE,
+    SET_MODE_SCHEMA,
 )
 from .entity import SecuritySpyEntity
 
@@ -46,9 +45,9 @@ async def async_setup_entry(
     platform = entity_platform.current_platform.get()
 
     platform.async_register_entity_service(
-        SERVICE_SET_RECORDING_MODE,
-        SET_RECORDING_MODE_SCHEMA,
-        "async_set_recording_mode",
+        SERVICE_SET_MODE,
+        SET_MODE_SCHEMA,
+        "async_set_mode",
     )
 
     return True
@@ -78,7 +77,7 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
     @property
     def motion_detection_enabled(self):
         """Camera Motion Detection Status."""
-        return self._device_data["recording_mode"]
+        return self._device_data["recording_mode_m"]
 
     @property
     def brand(self):
@@ -94,7 +93,10 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
     def is_recording(self):
         """Return true if the device is recording."""
         return bool(
-            self._device_data["recording_mode"] != RECORDING_TYPE_OFF
+            (
+                self._device_data["recording_mode_c"]
+                or self._device_data["recording_mode_m"]
+            )
             and self._device_data["online"]
         )
 
@@ -109,14 +111,14 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
             ATTR_LAST_TRIP_TIME: last_trip_time,
         }
 
-    async def async_set_recording_mode(self, recording_mode):
-        """Set Camera Recording Mode."""
-        await self.secspy.set_camera_recording(self._device_id, recording_mode)
+    async def async_set_mode(self, mode, enabled):
+        """Set Camera Mode."""
+        await self.secspy.set_camera_recording(self._device_id, mode, enabled)
 
     async def async_enable_motion_detection(self):
         """Enable motion detection in camera."""
         if not await self.secspy.set_camera_recording(
-            self._device_id, RECORDING_TYPE_MOTION
+            self._device_id, RECORDING_TYPE_MOTION, True
         ):
             return
         _LOGGER.debug("Motion Detection Enabled for Camera: %s", self._name)
@@ -124,7 +126,7 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
     async def async_disable_motion_detection(self):
         """Disable motion detection in camera."""
         if not await self.secspy.set_camera_recording(
-            self._device_id, RECORDING_TYPE_OFF
+            self._device_id, RECORDING_TYPE_MOTION, False
         ):
             return
         _LOGGER.debug("Motion Detection Disabled for Camera: %s", self._name)

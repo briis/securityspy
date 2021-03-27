@@ -6,6 +6,7 @@ from homeassistant.const import (
     ATTR_ENTITY_ID,
 )
 from pysecspy.const import (
+    RECORDING_TYPE_ACTION,
     RECORDING_TYPE_MOTION,
     RECORDING_TYPE_CONTINUOUS,
     RECORDING_TYPE_OFF,
@@ -18,7 +19,8 @@ DEFAULT_PORT = 8000
 DEFAULT_ATTRIBUTION = "Powered by SecuritySpy Server"
 DEFAULT_BRAND = "@bensoftware"
 
-CONF_RECORDING_MODE = "recording_mode"
+CONF_MODE = "mode"
+CONF_ENABLED = "enabled"
 
 ATTR_ONLINE = "online"
 ATTR_SENSITIVITY = "motion_sensitivity"
@@ -41,18 +43,17 @@ DEVICES_WITH_CAMERA = (
     DEVICE_TYPE_LOCAL,
 )
 
-VALID_RECORDING_MODES = [
+VALID_MODES = [
     RECORDING_TYPE_MOTION,
     RECORDING_TYPE_CONTINUOUS,
-    RECORDING_TYPE_OFF,
+    RECORDING_TYPE_ACTION,
 ]
-SERVICE_SET_RECORDING_MODE = "set_recording_mode"
-SET_RECORDING_MODE_SCHEMA = vol.Schema(
+SERVICE_SET_MODE = "set_mode"
+SET_MODE_SCHEMA = vol.Schema(
     {
         vol.Required(ATTR_ENTITY_ID): cv.entity_ids,
-        vol.Optional(CONF_RECORDING_MODE, default=RECORDING_TYPE_MOTION): vol.In(
-            VALID_RECORDING_MODES
-        ),
+        vol.Required(CONF_MODE): vol.In(VALID_MODES),
+        vol.Required(CONF_ENABLED): cv.boolean,
     }
 )
 
