@@ -15,7 +15,6 @@ from .const import (
     RECORDING_TYPE_ACTION,
     RECORDING_TYPE_CONTINUOUS,
     RECORDING_TYPE_MOTION,
-    RECORDING_TYPE_OFF,
 )
 from .entity import SecuritySpyEntity
 
