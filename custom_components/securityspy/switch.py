@@ -28,7 +28,7 @@ _SWITCH_REQUIRES = 3
 SWITCH_TYPES = {
     "enable_action": [
         "Actions",
-        "motion-sensor",
+        "script-text-play",
         RECORDING_TYPE_ACTION,
         None,
     ],
