@@ -13,9 +13,10 @@ from .const import (
     DEFAULT_ATTRIBUTION,
     DEFAULT_BRAND,
     ATTR_ONLINE,
+    ATTR_PRESET_ID,
     RECORDING_TYPE_MOTION,
-    SERVICE_SET_MODE,
-    SET_MODE_SCHEMA,
+    SERVICE_SET_ARM_MODE,
+    SET_ARM_MODE_SCHEMA,
 )
 from .entity import SecuritySpyEntity
 
@@ -45,9 +46,9 @@ async def async_setup_entry(
     platform = entity_platform.current_platform.get()
 
     platform.async_register_entity_service(
-        SERVICE_SET_MODE,
-        SET_MODE_SCHEMA,
-        "async_set_mode",
+        SERVICE_SET_ARM_MODE,
+        SET_ARM_MODE_SCHEMA,
+        "async_set_arm_mode",
     )
 
     return True
@@ -109,15 +110,17 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
             ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
             ATTR_ONLINE: self._device_data["online"],
             ATTR_LAST_TRIP_TIME: last_trip_time,
+            ATTR_PRESET_ID: self._schedule_presets,
         }
 
-    async def async_set_mode(self, mode, enabled):
-        """Set Camera Mode."""
-        await self.secspy.set_camera_recording(self._device_id, mode, enabled)
+    async def async_set_arm_mode(self, mode, enabled):
+        """Set Arming Mode."""
+        _LOGGER.debug("Setting Arm Mode for %s to %s", mode, enabled)
+        await self.secspy.set_arm_mode(self._device_id, mode, enabled)
 
     async def async_enable_motion_detection(self):
         """Enable motion detection in camera."""
-        if not await self.secspy.set_camera_recording(
+        if not await self.secspy.set_arm_mode(
             self._device_id, RECORDING_TYPE_MOTION, True
         ):
             return
@@ -125,7 +128,7 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
 
     async def async_disable_motion_detection(self):
         """Disable motion detection in camera."""
-        if not await self.secspy.set_camera_recording(
+        if not await self.secspy.set_arm_mode(
             self._device_id, RECORDING_TYPE_MOTION, False
         ):
             return

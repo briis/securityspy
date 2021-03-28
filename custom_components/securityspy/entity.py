@@ -25,6 +25,7 @@ class SecuritySpyEntity(Entity):
         self._mac = f"{self._device_data['ip_address']}_{self._device_id}"
         self._firmware_version = server_info["server_version"]
         self._server_id = server_info["server_id"]
+        self._schedule_presets = server_info["schedule_presets"]
         self._device_type = self._device_data["type"]
         self._model = self._device_data["model"]
         if self._sensor_type is None:

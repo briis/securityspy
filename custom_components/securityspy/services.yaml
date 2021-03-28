@@ -1,6 +1,6 @@
-set_mode:
-  name: Set Mode
-  description: "Set mode for the camera"
+set_arm_mode:
+  name: Set Arm Mode
+  description: "Set arming mode for the camera"
   fields:
     entity_id:
       name: Entity ID
@@ -29,3 +29,14 @@ set_mode:
       example: True
       selector:
         boolean:
+enable_schedule_preset:
+  name: Enable Schedule Preset
+  description: "Activate a specific Schedule Preset"
+  fields:
+    preset_id:
+      name: Schedule Preset ID
+      description: "The ID of the Schedule Preset to enable. (See Camera Attributes for a list.)"
+      required: true
+      example: "1214161810"
+      selector:
+        text:

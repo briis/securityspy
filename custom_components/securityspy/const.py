@@ -21,13 +21,12 @@ DEFAULT_BRAND = "@bensoftware"
 CONF_MODE = "mode"
 CONF_ENABLED = "enabled"
 
-ATTR_ONLINE = "online"
-ATTR_SENSITIVITY = "motion_sensitivity"
-ATTR_IMAGE_WIDTH = "image_width"
-ATTR_IMAGE_HEIGHT = "image_height"
 ATTR_BRAND = "brand"
 ATTR_EVENT_LENGTH = "event_length"
 ATTR_EVENT_OBJECT = "event_object"
+ATTR_ONLINE = "online"
+ATTR_PRESET_ID = "preset_id"
+ATTR_SENSITIVITY = "motion_sensitivity"
 
 DEVICE_TYPE_CAMERA = "camera"
 DEVICE_TYPE_DOORBELL = "doorbell"
@@ -47,8 +46,14 @@ VALID_MODES = [
     RECORDING_TYPE_CONTINUOUS,
     RECORDING_TYPE_ACTION,
 ]
-SERVICE_SET_MODE = "set_mode"
-SET_MODE_SCHEMA = vol.Schema(
+SERVICE_ENABLE_SCHEDULE_PRESET = "enable_schedule_preset"
+SERVICE_SET_ARM_MODE = "set_arm_mode"
+ENABLE_SCHEDULE_PRESET_SCHEMA = vol.Schema(
+    {
+        vol.Required(ATTR_PRESET_ID): cv.string,
+    }
+)
+SET_ARM_MODE_SCHEMA = vol.Schema(
     {
         vol.Required(ATTR_ENTITY_ID): cv.entity_ids,
         vol.Required(CONF_MODE): vol.In(VALID_MODES),

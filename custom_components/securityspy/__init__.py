@@ -25,6 +25,8 @@ from .const import (
     DEFAULT_BRAND,
     DOMAIN,
     SECURITYSPY_PLATFORMS,
+    SERVICE_ENABLE_SCHEDULE_PRESET,
+    ENABLE_SCHEDULE_PRESET_SCHEMA,
 )
 from .data import SecuritySpyData
 
@@ -85,6 +87,17 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool
             hass.config_entries.async_forward_entry_setup(entry, platform)
         )
 
+    async def async_enable_schedule_preset(service_entries):
+        """Call Enable Schedule Preset Handler."""
+        await async_handle_enable_schedule_preset(hass, entry, service_entries)
+
+    hass.services.async_register(
+        DOMAIN,
+        SERVICE_ENABLE_SCHEDULE_PRESET,
+        async_enable_schedule_preset,
+        schema=ENABLE_SCHEDULE_PRESET_SCHEMA,
+    )
+
     return True
 
 
@@ -101,6 +114,17 @@ async def _async_get_or_create_nvr_device_in_registry(
         model="Max OSX Computer",
         sw_version=nvr["server_version"],
     )
+
+
+async def async_handle_enable_schedule_preset(hass, entry, service_entries):
+    """Enable Schedule Preset."""
+
+    _LOGGER.debug("Setting Schedule Preset ID: %s", service_entries.data["preset_id"])
+    preset_id = service_entries.data["preset_id"]
+    entry_data = hass.data[DOMAIN][entry.entry_id]
+    secspy = entry_data["nvr"]
+
+    await secspy.enable_schedule_preset(preset_id)
 
 
 async def _async_options_updated(hass: HomeAssistantType, entry: ConfigEntry):
@@ -120,6 +144,7 @@ async def async_unload_entry(hass: HomeAssistantType, entry: ConfigEntry) -> boo
     )
 
     if unload_ok:
+        hass.services.async_remove(DOMAIN, SERVICE_ENABLE_SCHEDULE_PRESET)
         entry_data = hass.data[DOMAIN][entry.entry_id]
         entry_data["update_listener"]()
         await entry_data["secspy_data"].async_stop()
