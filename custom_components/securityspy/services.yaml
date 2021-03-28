@@ -12,16 +12,16 @@ set_mode:
           integration: securityspy
           domain: camera
     mode:
-      name: Recording Mode
-      description: "(Required) Valid options are: continuous = Continuous Recording, on_motion = Only record on motion, off = No recording. Default value is: on_motion"
+      name: Armed Mode
+      description: "(Required) Valid options are: continuous = Enable/Disable Continuous Recording, on_motion = Enable/Disable motion recording, action = Enable/Disable Actions."
       required: true
-      example: motion
+      example: on_motion
       selector:
         select:
           options:
             - "continuous"
             - "on_motion"
-            - "off"
+            - "action"
     enabled:
       name: Enabled
       description: "(Required) True or false"
