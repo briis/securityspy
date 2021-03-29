@@ -40,3 +40,23 @@ enable_schedule_preset:
       example: "1214161810"
       selector:
         text:
+download_latest_motion_recording:
+  name: Download latest motion recording
+  description: "Download the latest motion recording video to Home Assistant"
+  fields:
+    entity_id:
+      name: Entity ID
+      description: string (required) camera download recording for
+      example: "camera.outdoor"
+      required: true
+      selector:
+        entity:
+          integration: securityspy
+          domain: camera
+    filename:
+      name: Filename
+      description: "Enter directory and filename where to store the video in Home Assistant"
+      required: true
+      example: "/media/motion_recording.mv4"
+      selector:
+        text:

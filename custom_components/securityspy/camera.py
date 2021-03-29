@@ -12,10 +12,12 @@ from .const import (
     DOMAIN,
     DEFAULT_ATTRIBUTION,
     DEFAULT_BRAND,
+    DOWNLOAD_LATEST_MOTION_RECORDING_SCHEMA,
     ATTR_ONLINE,
     ATTR_PRESET_ID,
     RECORDING_TYPE_MOTION,
     SERVICE_SET_ARM_MODE,
+    SERVICE_DOWNLOAD_LATEST_MOTION_RECORDING,
     SET_ARM_MODE_SCHEMA,
 )
 from .entity import SecuritySpyEntity
@@ -49,6 +51,12 @@ async def async_setup_entry(
         SERVICE_SET_ARM_MODE,
         SET_ARM_MODE_SCHEMA,
         "async_set_arm_mode",
+    )
+
+    platform.async_register_entity_service(
+        SERVICE_DOWNLOAD_LATEST_MOTION_RECORDING,
+        DOWNLOAD_LATEST_MOTION_RECORDING_SCHEMA,
+        "async_download_latest_motion_recording",
     )
 
     return True
@@ -118,6 +126,25 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
         _LOGGER.debug("Setting Arm Mode for %s to %s", mode, enabled)
         await self.secspy.set_arm_mode(self._device_id, mode, enabled)
 
+    async def async_download_latest_motion_recording(self, filename):
+        """Download and save latest motion recording."""
+
+        if not self.hass.config.is_allowed_path(filename):
+            _LOGGER.debug(self.hass.config.path())
+            _LOGGER.error("Can't write %s, no access to path!", filename)
+            return
+
+        video = await self.secspy.get_latest_motion_recording(self._device_id)
+        if video is None:
+            _LOGGER.error("Last recording not found for Camera %s", self.name)
+            return
+
+        _LOGGER.debug("Saving recording in %s", filename)
+        try:
+            await self.hass.async_add_executor_job(_write_file, filename, video)
+        except OSError as err:
+            _LOGGER.error("Can't write video to file: %s", err)
+
     async def async_enable_motion_detection(self):
         """Enable motion detection in camera."""
         if not await self.secspy.set_arm_mode(
@@ -143,3 +170,10 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
     async def stream_source(self):
         """Return the Stream Source."""
         return self._stream_source
+
+
+def _write_file(to_file, content):
+    """Executor helper to write file."""
+    with open(to_file, "wb") as _file:
+        _file.write(content)
+        _LOGGER.debug("File written to %s", to_file)

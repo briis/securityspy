@@ -1,9 +1,9 @@
 """ Constant definitions for SecuritySpy Integration."""
-
 import voluptuous as vol
 from homeassistant.helpers import config_validation as cv
 from homeassistant.const import (
     ATTR_ENTITY_ID,
+    CONF_FILENAME,
 )
 from pysecspy.const import (
     RECORDING_TYPE_ACTION,
@@ -46,8 +46,15 @@ VALID_MODES = [
     RECORDING_TYPE_CONTINUOUS,
     RECORDING_TYPE_ACTION,
 ]
+SERVICE_DOWNLOAD_LATEST_MOTION_RECORDING = "download_latest_motion_recording"
 SERVICE_ENABLE_SCHEDULE_PRESET = "enable_schedule_preset"
 SERVICE_SET_ARM_MODE = "set_arm_mode"
+DOWNLOAD_LATEST_MOTION_RECORDING_SCHEMA = vol.Schema(
+    {
+        vol.Required(ATTR_ENTITY_ID): cv.entity_ids,
+        vol.Required(CONF_FILENAME): cv.string,
+    }
+)
 ENABLE_SCHEDULE_PRESET_SCHEMA = vol.Schema(
     {
         vol.Required(ATTR_PRESET_ID): cv.string,
