@@ -22,6 +22,10 @@ from .const import (
 )
 from .entity import SecuritySpyEntity
 
+CONF_RTSP_TRANSPORT = "rtsp_transport"
+FFMPEG_OPTION_MAP = {CONF_RTSP_TRANSPORT: "rtsp_transport"}
+ALLOWED_RTSP_TRANSPORT_PROTOCOLS = {"tcp", "udp", "udp_multicast", "http"}
+
 _LOGGER = logging.getLogger(__name__)
 
 
@@ -33,13 +37,17 @@ async def async_setup_entry(
     secspy_object = entry_data["nvr"]
     secspy_data = entry_data["secspy_data"]
     server_info = entry_data["server_info"]
+    disable_stream = entry_data["disable_stream"]
+
     if not secspy_data.data:
         return
 
     cameras = []
     for camera_id in secspy_data.data:
         cameras.append(
-            SecuritySpyCamera(secspy_object, secspy_data, server_info, camera_id)
+            SecuritySpyCamera(
+                secspy_object, secspy_data, server_info, camera_id, disable_stream
+            )
         )
         _LOGGER.debug("SECURITYSPY CAMERA CREATED: %s", camera_id)
 
@@ -65,13 +73,19 @@ async def async_setup_entry(
 class SecuritySpyCamera(SecuritySpyEntity, Camera):
     """A SecuritySpy Camera."""
 
-    def __init__(self, secspy_object, secspy_data, server_info, camera_id):
+    def __init__(
+        self, secspy_object, secspy_data, server_info, camera_id, disable_stream
+    ):
         """Initialize an SecuritySpy camera."""
         super().__init__(secspy_object, secspy_data, server_info, camera_id, None)
         self._name = self._device_data["name"]
-        self._stream_source = self._device_data["live_stream"]
+        self._stream_source = (
+            None if disable_stream else self._device_data["live_stream"]
+        )
         self._last_image = None
         self._supported_features = SUPPORT_STREAM if self._stream_source else 0
+        self._transport = "tcp" if disable_stream else "tcp"
+        self.stream_options[FFMPEG_OPTION_MAP[CONF_RTSP_TRANSPORT]] = self._transport
 
     @property
     def name(self):

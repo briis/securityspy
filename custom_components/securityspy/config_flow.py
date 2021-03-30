@@ -11,11 +11,12 @@ from homeassistant.const import (
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from pysecspy.secspy_server import SecSpyServer
-from pysecspy.errors import InvalidCredentials, RequestError, ResultError
+from pysecspy.errors import InvalidCredentials, RequestError
 from pysecspy.const import SERVER_ID, SERVER_NAME
 import voluptuous as vol
 
 from .const import (
+    CONF_DISABLE_RTSP,
     DEFAULT_PORT,
     DOMAIN,
 )
@@ -79,6 +80,7 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 CONF_PORT: user_input[CONF_PORT],
                 CONF_USERNAME: user_input.get(CONF_USERNAME),
                 CONF_PASSWORD: user_input.get(CONF_PASSWORD),
+                CONF_DISABLE_RTSP: user_input.get(CONF_DISABLE_RTSP),
             },
         )
 
@@ -92,6 +94,7 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(CONF_PORT, default=DEFAULT_PORT): int,
                     vol.Required(CONF_USERNAME): str,
                     vol.Required(CONF_PASSWORD): str,
+                    vol.Required(CONF_DISABLE_RTSP, default=False): bool,
                 }
             ),
             errors=errors or {},
@@ -129,6 +132,10 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                         CONF_PASSWORD,
                         default=self.config_entry.options.get(CONF_PASSWORD),
                     ): str,
+                    vol.Required(
+                        CONF_DISABLE_RTSP,
+                        default=self.config_entry.options.get(CONF_DISABLE_RTSP, False),
+                    ): bool,
                 }
             ),
         )
