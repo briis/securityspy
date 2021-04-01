@@ -79,9 +79,8 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
         """Initialize an SecuritySpy camera."""
         super().__init__(secspy_object, secspy_data, server_info, camera_id, None)
         self._name = self._device_data["name"]
-        mjpeg = f"http://192.168.1.195:8000/video?auth=YWRtaW46c2tpdEh0N0tMc2Z5&cameraNum={camera_id}&&12345"
         self._stream_source = (
-            mjpeg if disable_stream else self._device_data["live_stream"]
+            None if disable_stream else self._device_data["live_stream"]
         )
         self._last_image = None
         self._supported_features = SUPPORT_STREAM if self._stream_source else 0
