@@ -20,6 +20,7 @@ DEFAULT_BRAND = "@bensoftware"
 
 CONF_MODE = "mode"
 CONF_ENABLED = "enabled"
+CONF_DISABLE_RTSP = "disable_rtsp"
 
 ATTR_BRAND = "brand"
 ATTR_EVENT_LENGTH = "event_length"

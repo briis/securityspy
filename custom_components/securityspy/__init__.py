@@ -22,6 +22,7 @@ from pysecspy.secspy_server import SecSpyServer
 from pysecspy.const import SERVER_ID
 
 from .const import (
+    CONF_DISABLE_RTSP,
     DEFAULT_BRAND,
     DOMAIN,
     SECURITYSPY_PLATFORMS,
@@ -42,13 +43,25 @@ async def async_setup(hass: HomeAssistantType, config: ConfigType) -> bool:
 async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool:
     """Set up the SecuritySpy config entries."""
 
+    if not entry.options:
+        hass.config_entries.async_update_entry(
+            entry,
+            options={
+                CONF_HOST: entry.data.get(CONF_HOST),
+                CONF_PORT: entry.data.get(CONF_PORT),
+                CONF_USERNAME: entry.data.get(CONF_USERNAME),
+                CONF_PASSWORD: entry.data.get(CONF_PASSWORD),
+                CONF_DISABLE_RTSP: entry.data.get(CONF_DISABLE_RTSP, False),
+            },
+        )
+
     session = async_create_clientsession(hass)
     securityspyserver = SecSpyServer(
         session,
-        entry.data[CONF_HOST],
-        entry.data[CONF_PORT],
-        entry.data[CONF_USERNAME],
-        entry.data[CONF_PASSWORD],
+        entry.options[CONF_HOST],
+        entry.options[CONF_PORT],
+        entry.options[CONF_USERNAME],
+        entry.options[CONF_PASSWORD],
     )
 
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = securityspyserver
@@ -78,6 +91,7 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool
         "nvr": securityspyserver,
         "server_info": server_info,
         "update_listener": update_listener,
+        "disable_stream": entry.options[CONF_DISABLE_RTSP],
     }
 
     await _async_get_or_create_nvr_device_in_registry(hass, entry, server_info)

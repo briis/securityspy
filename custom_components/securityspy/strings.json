@@ -8,7 +8,8 @@
                     "host": "IP Address of SecuritySpy Server",
                     "port": "Http Port Number",
                     "username": "Username",
-                    "password": "Password"
+                    "password": "Password",
+                    "disable_rtsp": "Disable the RTSP stream"
                 }
             }
         },
@@ -27,7 +28,8 @@
                     "host": "IP Address of SecuritySpy Server",
                     "port": "Http Port Number",
                     "username": "Username",
-                    "password": "Password"
+                    "password": "Password",
+                    "disable_rtsp": "Disable the RTSP stream"
                 }
             }
         }

@@ -13,7 +13,8 @@
                     "host": "IP adresse på SecuritySpy Serveren",
                     "port": "Http Port nummer",
                     "username": "Brugernavn",
-                    "password": "Kodeord"
+                    "password": "Kodeord",
+                    "disable_rtsp": "Brug ikke RTSP stream"
                 },
                 "description": "Konfigurer SecuritySpy for at monitorere kameraer og sensorer.",
                 "title": "SecuritySpy"
@@ -27,7 +28,8 @@
                     "host": "IP adresse på SecuritySpy Serveren",
                     "port": "Http Port nummer",
                     "username": "Brugernavn",
-                    "password": "Kodeord"
+                    "password": "Kodeord",
+                    "disable_rtsp": "Brug ikke RTSP stream"
                 }
             }
         }
