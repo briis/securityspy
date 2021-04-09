@@ -3,7 +3,8 @@
 import logging
 
 from homeassistant.core import callback
-from homeassistant.helpers.event import async_track_time_interval
+
+# from homeassistant.helpers.event import async_track_time_interval
 from pysecspy.errors import RequestError
 
 _LOGGER = logging.getLogger(__name__)
@@ -12,15 +13,16 @@ _LOGGER = logging.getLogger(__name__)
 class SecuritySpyData:
     """Coordinate updates."""
 
-    def __init__(self, hass, secspyserver, update_interval):
+    # def __init__(self, hass, secspyserver, update_interval):
+    def __init__(self, hass, secspyserver):
         """Initialize an subscriber."""
         super().__init__()
         self._hass = hass
         self._secspyserver = secspyserver
         self.data = {}
-        self._update_interval = update_interval
+        # self._update_interval = update_interval
         self._subscriptions = {}
-        self._unsub_interval = None
+        # self._unsub_interval = None
         self._unsub_websocket = None
         self.last_update_success = False
 
@@ -36,9 +38,9 @@ class SecuritySpyData:
         if self._unsub_websocket:
             self._unsub_websocket()
             self._unsub_websocket = None
-        if self._unsub_interval:
-            self._unsub_interval()
-            self._unsub_interval = None
+        # if self._unsub_interval:
+        #     self._unsub_interval()
+        #     self._unsub_interval = None
         await self._secspyserver.async_disconnect_ws()
 
     async def async_refresh(self, *_, force_camera_update=False):
@@ -66,10 +68,10 @@ class SecuritySpyData:
     @callback
     def async_subscribe_device_id(self, device_id, update_callback):
         """Add an callback subscriber."""
-        if not self._subscriptions:
-            self._unsub_interval = async_track_time_interval(
-                self._hass, self.async_refresh, self._update_interval
-            )
+        # if not self._subscriptions:
+        #     self._unsub_interval = async_track_time_interval(
+        #         self._hass, self.async_refresh, self._update_interval
+        #     )
         self._subscriptions.setdefault(device_id, []).append(update_callback)
 
         def _unsubscribe():
@@ -83,9 +85,9 @@ class SecuritySpyData:
         self._subscriptions[device_id].remove(update_callback)
         if not self._subscriptions[device_id]:
             del self._subscriptions[device_id]
-        if not self._subscriptions:
-            self._unsub_interval()
-            self._unsub_interval = None
+        # if not self._subscriptions:
+        #     self._unsub_interval()
+        #     self._unsub_interval = None
 
     @callback
     def async_signal_device_id_update(self, device_id):
