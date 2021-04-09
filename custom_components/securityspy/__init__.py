@@ -73,7 +73,7 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool
         server_info = await securityspyserver.get_server_information()
     except InvalidCredentials as unauthex:
         _LOGGER.error("Could not authorize against SecuritySpy. Error: %s.", unauthex)
-        return
+        return False
     except (RequestError, ServerDisconnectedError) as notreadyerror:
         raise ConfigEntryNotReady from notreadyerror
 
