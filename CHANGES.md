@@ -2,7 +2,7 @@
 
 ## Version 1.0.1
 
-Release date: NOT RELEASED YET
+Release date: April 9th, 2021
 
 * `ADDED`: If you don't need Audio in the Live Stream, you can remove most of the latency in the stream, by not using the rtsp feed from the Camera. In order to do that, there is now an option in the Config Flow, to *Disable RTSP*. If this box is marked the stream will not use RTSP for streaming - and Audio will not work. If you already have configured the Integration, go to the *Integrations* page, and click OPTIONS on the SecuritySpy widget, then you will have the possibility to change this setting.
 * `FIXED`: If there were no Schedule Presets defined on the SecuritySpy Server, the Integration would not install. Fixing issue #16
