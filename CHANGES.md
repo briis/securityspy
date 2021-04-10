@@ -1,5 +1,12 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.0.2
+
+Release date: April 10th, 2021
+
+* `FIXED`: Issues #13 and #14 are fixed with this release. Specific Cameras and switches went off and on, without any actions by the user
+* `CHANGE`: Removed all code that would refresh sensors as per a specific timeinterval. All changes are now purely push based.
+
 ## Version 1.0.1
 
 Release date: April 9th, 2021
