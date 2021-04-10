@@ -84,8 +84,7 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
         )
         self._last_image = None
         self._supported_features = SUPPORT_STREAM if self._stream_source else 0
-        # self._transport = "tcp" if disable_stream else "tcp"
-        # self.stream_options[FFMPEG_OPTION_MAP[CONF_RTSP_TRANSPORT]] = self._transport
+        self.stream_options[FFMPEG_OPTION_MAP[CONF_RTSP_TRANSPORT]] = "tcp"
 
     @property
     def name(self):

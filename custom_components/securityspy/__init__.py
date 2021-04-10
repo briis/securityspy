@@ -1,7 +1,6 @@
 """SecuritySpy Platform."""
 
 import asyncio
-from datetime import timedelta
 import logging
 
 from aiohttp.client_exceptions import ServerDisconnectedError
@@ -67,7 +66,6 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = securityspyserver
     _LOGGER.debug("Connect to SecuritySpy")
 
-    # secspy_data = SecuritySpyData(hass, securityspyserver, timedelta(seconds=2))
     secspy_data = SecuritySpyData(hass, securityspyserver)
 
     try:

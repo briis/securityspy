@@ -10,6 +10,6 @@
         "@briis"
     ],
     "requirements": [
-        "pysecspy==1.1.3"
+        "pysecspy==1.1.7"
     ]
 }

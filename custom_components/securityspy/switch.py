@@ -127,7 +127,7 @@ class SecuritySpySwitch(SecuritySpyEntity, SwitchEntity):
             _LOGGER.debug("Turning on Motion Recording")
             await self.secspy.set_arm_mode(self._device_id, RECORDING_TYPE_MOTION, True)
         if self._switch_type == RECORDING_TYPE_CONTINUOUS:
-            _LOGGER.debug("Turning on Continuous Recordin")
+            _LOGGER.debug("Turning on Continuous Recording")
             await self.secspy.set_arm_mode(
                 self._device_id, RECORDING_TYPE_CONTINUOUS, True
             )
@@ -136,7 +136,7 @@ class SecuritySpySwitch(SecuritySpyEntity, SwitchEntity):
 
     async def async_turn_off(self, **kwargs):
         """Turn the device off."""
-        _LOGGER.debug("Turning off Recording")
+        _LOGGER.debug("Turning off Action or Recording")
         await self.secspy.set_arm_mode(self._device_id, self._switch_type, False)
 
         await self.secspy_data.async_refresh(force_camera_update=True)
