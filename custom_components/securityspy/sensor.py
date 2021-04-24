@@ -4,7 +4,7 @@ import logging
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_ATTRIBUTION
 from homeassistant.helpers.entity import Entity
-from homeassistant.helpers.typing import HomeAssistantType
+from homeassistant.core import HomeAssistant
 from .entity import SecuritySpyEntity
 
 from .const import (
@@ -50,7 +50,7 @@ _ICON_OFF = 1
 
 
 async def async_setup_entry(
-    hass: HomeAssistantType, entry: ConfigEntry, async_add_entities
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities
 ) -> None:
     """A SecsuritySpy Sensor."""
     entry_data = hass.data[DOMAIN][entry.entry_id]

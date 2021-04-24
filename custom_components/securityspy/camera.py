@@ -6,7 +6,7 @@ from homeassistant.components.camera import SUPPORT_STREAM, Camera
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_ATTRIBUTION, ATTR_LAST_TRIP_TIME
 from homeassistant.helpers import entity_platform
-from homeassistant.helpers.typing import HomeAssistantType
+from homeassistant.core import HomeAssistant
 
 from .const import (
     DOMAIN,
@@ -30,7 +30,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
-    hass: HomeAssistantType, entry: ConfigEntry, async_add_entities
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities
 ) -> None:
     """Discover cameras on a SecuritySpy NVR."""
     entry_data = hass.data[DOMAIN][entry.entry_id]

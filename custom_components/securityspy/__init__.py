@@ -12,10 +12,11 @@ from homeassistant.const import (
     CONF_USERNAME,
     CONF_PASSWORD,
 )
+from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 import homeassistant.helpers.device_registry as dr
-from homeassistant.helpers.typing import ConfigType, HomeAssistantType
+from homeassistant.helpers.typing import ConfigType
 from pysecspy.errors import InvalidCredentials, RequestError, ResultError
 from pysecspy.secspy_server import SecSpyServer
 from pysecspy.const import SERVER_ID
@@ -33,13 +34,13 @@ from .data import SecuritySpyData
 _LOGGER = logging.getLogger(__name__)
 
 
-async def async_setup(hass: HomeAssistantType, config: ConfigType) -> bool:
+async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the SecuritySpy components."""
 
     return True
 
 
-async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool:
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up the SecuritySpy config entries."""
 
     if not entry.options:
@@ -115,7 +116,7 @@ async def async_setup_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool
 
 
 async def _async_get_or_create_nvr_device_in_registry(
-    hass: HomeAssistantType, entry: ConfigEntry, nvr
+    hass: HomeAssistant, entry: ConfigEntry, nvr
 ) -> None:
     device_registry = await dr.async_get_registry(hass)
     device_registry.async_get_or_create(
@@ -140,12 +141,12 @@ async def async_handle_enable_schedule_preset(hass, entry, service_entries):
     await secspy.enable_schedule_preset(preset_id)
 
 
-async def _async_options_updated(hass: HomeAssistantType, entry: ConfigEntry):
+async def _async_options_updated(hass: HomeAssistant, entry: ConfigEntry):
     """Update options."""
     await hass.config_entries.async_reload(entry.entry_id)
 
 
-async def async_unload_entry(hass: HomeAssistantType, entry: ConfigEntry) -> bool:
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload Unifi Protect config entry."""
     unload_ok = all(
         await asyncio.gather(
