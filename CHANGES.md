@@ -1,5 +1,11 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.0.3
+
+Release date: NOT RELEASED YET
+
+* `CHANGE`: Modified several files to ensure compatability with 2021.5.x releases
+
 ## Version 1.0.2
 
 Release date: April 10th, 2021
