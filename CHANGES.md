@@ -2,9 +2,10 @@
 
 ## Version 1.0.3
 
-Release date: NOT RELEASED YET
+Release date: May 4th, 2021
 
 * `CHANGE`: Modified several files to ensure compatability with 2021.5.x releases
+* `CHANGE`: Added **iot_class** to `manifest.json` as per Home Assistant 2021.5 requirements.
 
 ## Version 1.0.2
 
