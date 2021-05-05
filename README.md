@@ -23,6 +23,8 @@ Before you install this Integration you need to ensure that the following settin
 
 ![Web Server Setup](https://github.com/briis/securityspy/blob/master/support_files/secspy_webserver_sm.png) ![User Setup](https://github.com/briis/securityspy/blob/master/support_files/secspy_users_sm.png)
 
+3. **Setup Motion Capture** With the current API from SecuritySpy, Motion Capture needs to be setup in a specific way for the Motion Detection sensors to work. So **for each Camera** go to *Settings* and then *Motion Capture*. Under Movie Capture, enable *Capture movie in response to motion trigger* and in Capture Type, select *One movie per event*. Remember to press *Apply Preferences* in the top Right corner.
+
 **Note** This Integration is only guaranteed to work on version 5.3.2 and greater of SecuritySpy.
 
 ## Installation
@@ -73,3 +75,12 @@ If the Server is found on the network it will be added to your installation. Aft
 **password**
 (string)(Required) The password you setup under the *Prerequisites* section.
 
+
+## Enable Debug Logging
+If logs are needed for debugging or reporting an issue, use the following configuration.yaml:
+```yaml
+logger:
+  default: error
+  logs:
+    custom_components.securityspy: debug
+```
