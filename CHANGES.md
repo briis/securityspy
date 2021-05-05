@@ -1,5 +1,12 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.0.4
+
+Release date: NOT RELEASED YET
+
+* `FIX`: If SecuritySpy had only 1 camera attached, the Integration would fail during setup. Issue #21
+
+
 ## Version 1.0.3
 
 Release date: May 4th, 2021
