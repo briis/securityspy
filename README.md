@@ -75,6 +75,52 @@ If the Server is found on the network it will be added to your installation. Aft
 **password**
 (string)(Required) The password you setup under the *Prerequisites* section.
 
+## Automation Examples
+
+Here are examples of different automations that can be used with this integration.
+
+### Capture Image when Person is detected
+
+This automation captures an image, when a Person is detected on the Camera. For the example, the Camera is called `camera.outdoor` so the motion sensor will then be named `binary_sensor.motion_outdoor` It is a very basic example, but it can be used to illustrate the use case. `event_object` can be *human* or *vehicle*.
+
+```yaml
+alias: Capture snapshot when person is detected
+description: ''
+trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_outdoor
+    attribute: event_object
+    to: human
+condition: []
+action:
+  - service: camera.snapshot
+    target:
+      entity_id: camera.outdoor
+    data:
+      filename: /config/www/camera_outdoor.jpg
+mode: single
+```
+
+### Download Video Recording when motion is complete
+
+If you want to have a copy of the latest Video recording on your local Home Assistant, then the below is an example on how to do that. Again the Camera is called `camera.outdoor` so the motion sensor will then be named `binary_sensor.motion_outdoor`
+
+```yaml
+alias: Download Recording after motion
+description: ''
+trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_outdoor
+    from: 'on'
+    to: 'off'
+condition: []
+action:
+  - service: securityspy.download_latest_motion_recording
+    data:
+      entity_id: camera.outdoor
+      filename: /media/outdoor_latest.m4v
+mode: restart
+```
 
 ## Enable Debug Logging
 If logs are needed for debugging or reporting an issue, use the following configuration.yaml:
