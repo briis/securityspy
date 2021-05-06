@@ -2,7 +2,7 @@
 
 ## Version 1.0.4
 
-Release date: NOT RELEASED YET
+Release date: May 6th, 2021
 
 * `FIX`: If SecuritySpy had only 1 camera attached, the Integration would fail during setup. Issue #21
 * `ADDED`: The CLASSIFY event is now also added to the Event Stream, so that this, in combination with the TRIGGER_M event, will ensure we record if a Human or Vehicle is detected. Requires that the `Motion Capture AI Trigger` threshold is set to a value larger than 0 on the *Triggers* Settings tab. See the [README.md](https://github.com/briis/securityspy#capture-image-when-person-is-detected) file for an example of how to make an automation based on this.
