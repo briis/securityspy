@@ -15,7 +15,8 @@
         },
         "error": {
             "connection_error": "Failed to connect. Wrong IP or Username/Password.",
-            "nvr_error": "Error retrieving data from SecuritySpy."
+            "nvr_error": "Error retrieving data from SecuritySpy.",
+            "version_old": "The installed version of SecuritySpy is not compatible with this version of the Integration. Please upgrade SecuritySpy and try again."
         },
         "abort": {
             "server_exists": "SecuritySpy Server allready configured."

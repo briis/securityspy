@@ -19,6 +19,7 @@ from .const import (
     CONF_DISABLE_RTSP,
     DEFAULT_PORT,
     DOMAIN,
+    MIN_SECSPY_VERSION,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -62,6 +63,14 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         except RequestError as ex:
             _LOGGER.debug(ex)
             errors["base"] = "nvr_error"
+            return await self._show_setup_form(errors)
+
+        if server_info["server_version"] < MIN_SECSPY_VERSION:
+            _LOGGER.debug(
+                "This version of SecuritySpy is too old. Please upgrade to minimum V%s and try again.",
+                MIN_SECSPY_VERSION,
+            )
+            errors["base"] = "version_old"
             return await self._show_setup_form(errors)
 
         unique_id = server_info[SERVER_ID]

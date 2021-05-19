@@ -5,7 +5,8 @@
         },
         "error": {
             "connection_error": "Kan ikke forbinde. Forkert IP eller Brugernavn/Kodeord.",
-            "nvr_error": "Kan ikke hente data fra SecuritySpy."
+            "nvr_error": "Kan ikke hente data fra SecuritySpy.",
+            "version_old": "Den installerede version af SecuritySpy er ikke kompatibel med denne Integration. Opgrader til senest version og prøv igen."
         },
         "step": {
             "user": {

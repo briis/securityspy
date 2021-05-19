@@ -1,5 +1,11 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.0.5
+
+Release date: NOT RELEASED YET
+
+* `CHANGED`: Ben from Bensoftware made a change I asked for, so it is now possible to optimize the Binary Motion Sensor, so that we don't need to wait for a file to be written. The sensor now turns on and off much faster, and we don't need specific Capture settings. It requires minimum V5.3.4b3 of SecuritySpy for this work.
+
 ## Version 1.0.4
 
 Release date: May 6th, 2021
