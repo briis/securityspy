@@ -28,6 +28,7 @@ from .const import (
     SECURITYSPY_PLATFORMS,
     SERVICE_ENABLE_SCHEDULE_PRESET,
     ENABLE_SCHEDULE_PRESET_SCHEMA,
+    MIN_SECSPY_VERSION,
 )
 from .data import SecuritySpyData
 
@@ -76,6 +77,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         return False
     except (RequestError, ServerDisconnectedError) as notreadyerror:
         raise ConfigEntryNotReady from notreadyerror
+
+    if server_info["server_version"] < MIN_SECSPY_VERSION:
+        _LOGGER.error(
+            "This version of SecuritySpy is too old. Please upgrade to minimum V%s and try again.",
+            MIN_SECSPY_VERSION,
+        )
+        return False
 
     if entry.unique_id is None:
         hass.config_entries.async_update_entry(entry, unique_id=server_info[SERVER_ID])

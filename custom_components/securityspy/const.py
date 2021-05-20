@@ -17,7 +17,7 @@ UNIQUE_ID = "unique_id"
 DEFAULT_PORT = 8000
 DEFAULT_ATTRIBUTION = "Powered by SecuritySpy Server"
 DEFAULT_BRAND = "@bensoftware"
-MIN_SECSPY_VERSION = "5.3.4b3"
+MIN_SECSPY_VERSION = "5.3.4"
 
 CONF_MODE = "mode"
 CONF_ENABLED = "enabled"
