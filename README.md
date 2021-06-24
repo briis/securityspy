@@ -21,9 +21,11 @@ Before you install this Integration you need to ensure that the following settin
 
 2. **Add a Web Server User** You must add a user with either *Administrator* privileges or at least *Get Live Video and Images* and *Arm and Disarm, set schedules* privileges. **Note**: This might not be enough, as I have seen some errors, when using a user like that. If you want to be sure that it works for now, give the user *Administrative* rights.
 
+3. This Integration is only guaranteed to work on version 5.3.4 and greater of SecuritySpy.
+
 ![Web Server Setup](https://github.com/briis/securityspy/blob/master/support_files/secspy_webserver_sm.png) ![User Setup](https://github.com/briis/securityspy/blob/master/support_files/secspy_users_sm.png)
 
-**Note** This Integration is only guaranteed to work on version 5.3.4 and greater of SecuritySpy.
+**Note** As Home Assistant only supports AAC audio format and SecuritySpy only sends audio in µLaw, there is NO AUDIO on the Live Stream. Hopefylly this can be corrected in future updates of either of these programs.
 
 ## Installation
 
@@ -65,13 +67,16 @@ If the Server is found on the network it will be added to your installation. Aft
 (string)(Required) Type the IP address of your *SecuritySpy Server*. Example: `192.168.1.10`
 
 **port**:
-(int)(required) Type the Port number you setup under the *Prerequisites* section.
+(int)(required) Type the Port number you setup under the *Prerequisites* section. Example: `8000`
 
 **username**:
 (string)(Required) The username you setup under the *Prerequisites* section.
 
 **password**
 (string)(Required) The password you setup under the *Prerequisites* section.
+
+**disable rtsp stream**
+(boolean)(Optional) Mark this box, if you want to diable the RTSP stream - Gives better realtime live streaming.
 
 ## Automation Examples
 
