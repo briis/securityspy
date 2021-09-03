@@ -58,12 +58,13 @@ async def async_setup_entry(
 
     platform = entity_platform.current_platform.get()
 
-    _LOGGER.debug("Creating Service: Enable/Disable Camera")
-    platform.async_register_entity_service(
-        SERVICE_ENABLE_DISABLE_CAMERA,
-        ENABLE_DISABLE_CAMERA_SCHEMA,
-        "async_enable_disable_camera",
-    )
+    # Not Active yet, as Enable does not work
+    # _LOGGER.debug("Creating Service: Enable/Disable Camera")
+    # platform.async_register_entity_service(
+    #     SERVICE_ENABLE_DISABLE_CAMERA,
+    #     ENABLE_DISABLE_CAMERA_SCHEMA,
+    #     "async_enable_disable_camera",
+    # )
 
     _LOGGER.debug("Creating Service: Set Arm Mode")
     platform.async_register_entity_service(
