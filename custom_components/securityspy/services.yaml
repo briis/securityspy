@@ -61,7 +61,7 @@ download_latest_motion_recording:
       selector:
         text:
 enable_disable_camera:
-  name: Enable or Diable a Camera
+  name: Enable or Disable a Camera
   description: "Service to enable or disable a camera in SecuritySpy"
   fields:
     entity_id:
