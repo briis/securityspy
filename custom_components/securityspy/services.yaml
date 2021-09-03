@@ -60,3 +60,23 @@ download_latest_motion_recording:
       example: "/media/motion_recording.mv4"
       selector:
         text:
+enable_disable_camera:
+  name: Enable or Diable a Camera
+  description: "Service to enable or disable a camera in SecuritySpy"
+  fields:
+    entity_id:
+      name: Entity ID
+      description: "string (required) camera to enable or disable"
+      required: true
+      example: "camera.outdoor"
+      selector:
+        entity:
+          integration: securityspy
+          domain: camera
+    enabled:
+      name: Enabled
+      description: True to enable the Camera, false to disable
+      required: true
+      example: "true"
+      selector:
+        boolean:

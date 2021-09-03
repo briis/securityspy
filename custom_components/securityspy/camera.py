@@ -13,9 +13,12 @@ from .const import (
     DEFAULT_ATTRIBUTION,
     DEFAULT_BRAND,
     DOWNLOAD_LATEST_MOTION_RECORDING_SCHEMA,
+    ATTR_ENABLED,
     ATTR_ONLINE,
     ATTR_PRESET_ID,
+    ENABLE_DISABLE_CAMERA_SCHEMA,
     RECORDING_TYPE_MOTION,
+    SERVICE_ENABLE_DISABLE_CAMERA,
     SERVICE_SET_ARM_MODE,
     SERVICE_DOWNLOAD_LATEST_MOTION_RECORDING,
     SET_ARM_MODE_SCHEMA,
@@ -55,12 +58,21 @@ async def async_setup_entry(
 
     platform = entity_platform.current_platform.get()
 
+    _LOGGER.debug("Creating Service: Enable/Disable Camera")
+    platform.async_register_entity_service(
+        SERVICE_ENABLE_DISABLE_CAMERA,
+        ENABLE_DISABLE_CAMERA_SCHEMA,
+        "async_enable_disable_camera",
+    )
+
+    _LOGGER.debug("Creating Service: Set Arm Mode")
     platform.async_register_entity_service(
         SERVICE_SET_ARM_MODE,
         SET_ARM_MODE_SCHEMA,
         "async_set_arm_mode",
     )
 
+    _LOGGER.debug("Creating Service: Download Latest Recording")
     platform.async_register_entity_service(
         SERVICE_DOWNLOAD_LATEST_MOTION_RECORDING,
         DOWNLOAD_LATEST_MOTION_RECORDING_SCHEMA,
@@ -130,9 +142,15 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
         return {
             ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
             ATTR_ONLINE: self._device_data["online"],
+            ATTR_ENABLED: self._device_data["enabled"],
             ATTR_LAST_TRIP_TIME: last_trip_time,
             ATTR_PRESET_ID: self._schedule_presets,
         }
+
+    async def async_enable_disable_camera(self, enabled):
+        """Enable/Disable camera."""
+        _LOGGER.debug("Setting Camera to enabled = %s", enabled)
+        await self.secspy.enable_camera(self._device_id, enabled)
 
     async def async_set_arm_mode(self, mode, enabled):
         """Set Arming Mode."""
