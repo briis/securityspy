@@ -113,6 +113,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         """Call Enable Schedule Preset Handler."""
         await async_handle_enable_schedule_preset(hass, entry, service_entries)
 
+    _LOGGER.debug("Creating Service: Enable Schedule Preset")
     hass.services.async_register(
         DOMAIN,
         SERVICE_ENABLE_SCHEDULE_PRESET,
