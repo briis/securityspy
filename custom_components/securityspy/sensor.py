@@ -2,7 +2,7 @@
 import logging
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import ATTR_ATTRIBUTION
+from homeassistant.const import ATTR_ATTRIBUTION, ENTITY_CATEGORY_DIAGNOSTIC
 from homeassistant.helpers.entity import Entity
 from homeassistant.core import HomeAssistant
 from .entity import SecuritySpyEntity
@@ -96,6 +96,7 @@ class SecuritySpySensor(SecuritySpyEntity, Entity):
         self._units = sensor_type[_SENSOR_UNITS]
         self._icons = sensor_type[_SENSOR_ICONS]
         self._sensor_type = sensor_type[_SENSOR_TYPE]
+        self._attr_entity_category = ENTITY_CATEGORY_DIAGNOSTIC
 
     @property
     def name(self):
