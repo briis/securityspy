@@ -2,7 +2,7 @@
 import logging
 
 import homeassistant.helpers.device_registry as dr
-from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.entity import Entity, DeviceInfo
 
 from .const import DEFAULT_BRAND, DOMAIN
 
@@ -28,6 +28,8 @@ class SecuritySpyEntity(Entity):
         self._schedule_presets = server_info["schedule_presets"]
         self._device_type = self._device_data["type"]
         self._model = self._device_data["model"]
+        self._server_ip = server_info["server_ip_address"]
+        self._server_port = server_info["server_port"]
         if self._sensor_type is None:
             self._unique_id = f"{self._device_id}_{self._server_id}"
         else:
@@ -44,16 +46,17 @@ class SecuritySpyEntity(Entity):
         return self._unique_id
 
     @property
-    def device_info(self):
+    def device_info(self) -> DeviceInfo:
         """Return Device Info."""
-        return {
-            "connections": {(dr.CONNECTION_NETWORK_MAC, self._mac)},
-            "name": self._device_name,
-            "manufacturer": DEFAULT_BRAND,
-            "model": self._model,
-            "sw_version": self._firmware_version,
-            "via_device": (DOMAIN, self._server_id),
-        }
+        return DeviceInfo(
+            connections={(dr.CONNECTION_NETWORK_MAC, self._mac)},
+            name=self._device_name,
+            manufacturer=DEFAULT_BRAND,
+            model=self._model,
+            sw_version=self._firmware_version,
+            via_device=(DOMAIN, self._server_id),
+            configuration_url=f"http://{self._server_ip}:{self._server_port}/camerasettings?cameraNum={self._device_id}",
+        )
 
     @property
     def available(self):
