@@ -18,8 +18,8 @@ import voluptuous as vol
 from .const import (
     CONF_DISABLE_RTSP,
     DEFAULT_PORT,
-    DOMAIN,
     MIN_SECSPY_VERSION,
+    DOMAIN,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -103,7 +103,7 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(CONF_PORT, default=DEFAULT_PORT): int,
                     vol.Required(CONF_USERNAME): str,
                     vol.Required(CONF_PASSWORD): str,
-                    vol.Required(CONF_DISABLE_RTSP, default=False): bool,
+                    vol.Required(CONF_DISABLE_RTSP, default=True): bool,
                 }
             ),
             errors=errors or {},
