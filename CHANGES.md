@@ -1,5 +1,11 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.1.0
+
+Release date: NOT RELEASED
+
+* `NEW`: Added configuration url for each camera on the *Devices* page, so that you can go directly from here to the Camera Settings page in SecuritySpy
+
 ## Version 1.0.7
 
 Release date: Sepetember 7th, 2021
