@@ -103,7 +103,7 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(CONF_PORT, default=DEFAULT_PORT): int,
                     vol.Required(CONF_USERNAME): str,
                     vol.Required(CONF_PASSWORD): str,
-                    vol.Required(CONF_DISABLE_RTSP, default=True): bool,
+                    vol.Required(CONF_DISABLE_RTSP, default=False): bool,
                 }
             ),
             errors=errors or {},
