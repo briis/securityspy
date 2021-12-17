@@ -2,15 +2,12 @@
 import logging
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import ATTR_ATTRIBUTION, ENTITY_CATEGORY_DIAGNOSTIC
+from homeassistant.const import ENTITY_CATEGORY_DIAGNOSTIC
 from homeassistant.helpers.entity import Entity
 from homeassistant.core import HomeAssistant
 from .entity import SecuritySpyEntity
 
 from .const import (
-    ATTR_BRAND,
-    DEFAULT_ATTRIBUTION,
-    DEFAULT_BRAND,
     DOMAIN,
     RECORDING_TYPE_ACTION,
     RECORDING_TYPE_CONTINUOUS,
@@ -63,16 +60,6 @@ async def async_setup_entry(
     sensors = []
     for sensor in SENSOR_TYPES:
         for device_id in secspy_data.data:
-            # if (
-            #     secspy_data.data[device_id].get("type").lower()
-            #     in sensor_type[_SENSOR_MODEL]
-            # ):
-            #     sensors.append(
-            #         SecuritySpySensor(
-            #             secspy_object, secspy_data, server_info, device_id, sensor
-            #         )
-            #     )
-            #     _LOGGER.debug("SECURITYSPY SENSOR CREATED: %s", sensor)
             sensors.append(
                 SecuritySpySensor(
                     secspy_object, secspy_data, server_info, device_id, sensor
@@ -128,11 +115,3 @@ class SecuritySpySensor(SecuritySpyEntity, Entity):
     def device_class(self):
         """Return the device class of the sensor."""
         return None
-
-    @property
-    def device_state_attributes(self):
-        """Return the device state attributes."""
-        return {
-            ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
-            ATTR_BRAND: DEFAULT_BRAND,
-        }

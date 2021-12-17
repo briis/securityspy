@@ -1,10 +1,16 @@
 """Shared Entity definition for SecurotySpy Integration."""
 import logging
 
+from homeassistant.const import ATTR_ATTRIBUTION
 import homeassistant.helpers.device_registry as dr
 from homeassistant.helpers.entity import Entity, DeviceInfo
 
-from .const import DEFAULT_BRAND, DOMAIN
+from .const import (
+    ATTR_BRAND,
+    DEFAULT_ATTRIBUTION,
+    DEFAULT_BRAND,
+    DOMAIN,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -62,6 +68,14 @@ class SecuritySpyEntity(Entity):
     def available(self):
         """Return if entity is available."""
         return self.secspy_data.last_update_success
+
+    @property
+    def extra_state_attributes(self):
+        """Return the device state attributes."""
+        return {
+            ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
+            ATTR_BRAND: DEFAULT_BRAND,
+        }
 
     async def async_added_to_hass(self):
         """When entity is added to hass."""

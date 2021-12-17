@@ -4,13 +4,12 @@ import logging
 
 from homeassistant.components.camera import SUPPORT_STREAM, Camera
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import ATTR_ATTRIBUTION, ATTR_LAST_TRIP_TIME
+from homeassistant.const import ATTR_LAST_TRIP_TIME
 from homeassistant.helpers import entity_platform
 from homeassistant.core import HomeAssistant
 
 from .const import (
     DOMAIN,
-    DEFAULT_ATTRIBUTION,
     DEFAULT_BRAND,
     DOWNLOAD_LATEST_MOTION_RECORDING_SCHEMA,
     ATTR_ENABLED,
@@ -136,12 +135,12 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
         )
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Add additional Attributes to Camera."""
         last_trip_time = self._device_data["last_motion"]
 
         return {
-            ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
+            **super().extra_state_attributes,
             ATTR_ONLINE: self._device_data["online"],
             ATTR_ENABLED: self._device_data["enabled"],
             ATTR_LAST_TRIP_TIME: last_trip_time,

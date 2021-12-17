@@ -8,7 +8,6 @@ from homeassistant.components.binary_sensor import (
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
-    ATTR_ATTRIBUTION,
     ATTR_LAST_TRIP_TIME,
     ENTITY_CATEGORY_DIAGNOSTIC,
 )
@@ -17,7 +16,6 @@ from homeassistant.core import HomeAssistant
 from .const import (
     ATTR_EVENT_LENGTH,
     ATTR_EVENT_OBJECT,
-    DEFAULT_ATTRIBUTION,
     DEVICE_TYPE_DOORBELL,
     DEVICE_TYPE_MOTION,
     DOMAIN,
@@ -88,10 +86,10 @@ class SecuritySpyBinarySensor(SecuritySpyEntity, BinarySensorEntity):
         return self._device_class
 
     @property
-    def device_state_attributes(self):
+    def extra_state_attributes(self):
         """Return the device state attributes."""
         return {
-            ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
+            **super().extra_state_attributes,
             ATTR_LAST_TRIP_TIME: self._device_data["last_motion"],
             ATTR_EVENT_LENGTH: self._device_data["event_length"],
             ATTR_EVENT_OBJECT: self._device_data["event_object"],

@@ -4,14 +4,11 @@ import logging
 
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import ATTR_ATTRIBUTION, ENTITY_CATEGORY_CONFIG
+from homeassistant.const import ENTITY_CATEGORY_CONFIG
 from homeassistant.core import HomeAssistant
 
 from .const import (
     DOMAIN,
-    DEFAULT_ATTRIBUTION,
-    DEFAULT_BRAND,
-    ATTR_BRAND,
     RECORDING_TYPE_ACTION,
     RECORDING_TYPE_CONTINUOUS,
     RECORDING_TYPE_MOTION,
@@ -110,14 +107,6 @@ class SecuritySpySwitch(SecuritySpyEntity, SwitchEntity):
     def icon(self):
         """Icon to use in the frontend, if any."""
         return self._icon
-
-    @property
-    def device_state_attributes(self):
-        """Return the device state attributes."""
-        return {
-            ATTR_ATTRIBUTION: DEFAULT_ATTRIBUTION,
-            ATTR_BRAND: DEFAULT_BRAND,
-        }
 
     async def async_turn_on(self, **kwargs):
         """Turn the device on."""
