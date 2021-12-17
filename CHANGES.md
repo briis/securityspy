@@ -4,6 +4,7 @@
 
 Release date: NOT RELEASED
 
+* `FIXED`: Deprecation warning about `device_state_attributes` start showing up in Home Assistant 2021.12. This is now corrected and moved to the correct type.
 * `NEW`: Added configuration url for each camera on the *Devices* page, so that you can go directly from here to the Camera Settings page in SecuritySpy
 * `NEW`: **Breaking Change** As part of Home Assistant 2021.11 a new Entity Category is introduced. This makes it possible to classify an entity as either `config` or `diagnostic`. A `config` entity is used for entities that can change the configuration of a device and a `diagnostic` entity is used for devices that report status, but does not allow changes. These to entity categories have been applied to selected entities in this Integration.<br>
 Entities which have the entity_category set:

@@ -15,6 +15,7 @@ from .const import (
     ATTR_ENABLED,
     ATTR_ONLINE,
     ATTR_PRESET_ID,
+    ATTR_PTZ_CAPABILITIES,
     ENABLE_DISABLE_CAMERA_SCHEMA,
     RECORDING_TYPE_MOTION,
     SERVICE_ENABLE_DISABLE_CAMERA,
@@ -145,6 +146,7 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
             ATTR_ENABLED: self._device_data["enabled"],
             ATTR_LAST_TRIP_TIME: last_trip_time,
             ATTR_PRESET_ID: self._schedule_presets,
+            ATTR_PTZ_CAPABILITIES: self._device_data["ptz_capabilities"],
         }
 
     async def async_enable_disable_camera(self, enabled):

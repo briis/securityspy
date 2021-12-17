@@ -29,6 +29,7 @@ ATTR_EVENT_LENGTH = "event_length"
 ATTR_EVENT_OBJECT = "event_object"
 ATTR_ONLINE = "online"
 ATTR_PRESET_ID = "preset_id"
+ATTR_PTZ_CAPABILITIES = "ptz_capabilities"
 ATTR_SENSITIVITY = "motion_sensitivity"
 
 DEVICE_TYPE_CAMERA = "camera"
