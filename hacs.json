@@ -1,7 +1,7 @@
 {
     "name": "SecuritySpy for Home Assistant",
     "render_readme": true,
-    "homeassistant": "2021.3.0",
+    "homeassistant": "2021.11.0",
     "domains": [
         "sensor",
         "binary_sensor",
