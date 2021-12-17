@@ -1,22 +1,26 @@
 // See https://aka.ms/vscode-remote/devcontainer.json for format details.
 {
 	"name": "Home Assistant SecuritySpy Development",
-	"image": "ghcr.io/ludeeus/devcontainer/integration:stable",
+	"dockerFile": "Dockerfile",
 	"context": "..",
 	"appPort": [
-		"0.0.0.0:9126:8123"
+		"9126:9126"
 	],
-	"postCreateCommand": "container install",
+	"runArgs": [
+		"-v",
+		"${env:HOME}${env:USERPROFILE}/.ssh:/tmp/.ssh" // This is added so you can push from inside the container
+	],
 	"extensions": [
 		"ms-python.python",
 		"github.vscode-pull-request-github",
 		"ryanluker.vscode-coverage-gutters",
-		"ms-python.vscode-pylance"
+		"ms-python.vscode-pylance",
+		"kevinglasson.cornflakes-linter"
 	],
 	"settings": {
 		"files.eol": "\n",
 		"editor.tabSize": 4,
-		"terminal.integrated.shell.linux": "/bin/bash",
+		"terminal.integrated.defaultProfile.linux": "bash",
 		"python.pythonPath": "/usr/local/python/bin/python",
 		"python.analysis.autoSearchPaths": false,
 		"python.linting.pylintEnabled": true,
@@ -29,6 +33,9 @@
 		"editor.formatOnPaste": false,
 		"editor.formatOnSave": true,
 		"editor.formatOnType": true,
-		"files.trimTrailingWhitespace": true
+		"files.trimTrailingWhitespace": true,
+		"yaml.customTags": [
+			"!secret scalar"
+		]
 	}
 }

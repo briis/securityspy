@@ -1,8 +1,15 @@
 default_config:
 
+debugpy:
+  start: false
+
+http:
+  server_port: 9126
+
 stream:
 
 logger:
   default: error
   logs:
+    pysecspy: debug
     custom_components.securityspy: debug
