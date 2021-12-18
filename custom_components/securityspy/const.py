@@ -84,4 +84,5 @@ SECURITYSPY_PLATFORMS = [
     "binary_sensor",
     "sensor",
     "switch",
+    "button",
 ]
