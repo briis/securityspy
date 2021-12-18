@@ -7,6 +7,9 @@ http:
   server_port: 9126
 
 stream:
+  ll_hls: true
+  part_duration: 0.75
+  segment_duration: 2
 
 logger:
   default: error
