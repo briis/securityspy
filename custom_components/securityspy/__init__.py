@@ -65,7 +65,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         entry.options[CONF_PASSWORD],
     )
 
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = securityspyserver
     _LOGGER.debug("Connect to SecuritySpy")
 
     secspy_data = SecuritySpyData(hass, securityspyserver)
@@ -94,6 +93,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     update_listener = entry.add_update_listener(_async_options_updated)
 
+    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = securityspyserver
     hass.data[DOMAIN][entry.entry_id] = {
         "secspy_data": secspy_data,
         "nvr": securityspyserver,
