@@ -16,9 +16,7 @@ from .const import (
     ATTR_ONLINE,
     ATTR_PRESET_ID,
     ATTR_PTZ_CAPABILITIES,
-    ENABLE_DISABLE_CAMERA_SCHEMA,
     RECORDING_TYPE_MOTION,
-    SERVICE_ENABLE_DISABLE_CAMERA,
     SERVICE_SET_ARM_MODE,
     SERVICE_DOWNLOAD_LATEST_MOTION_RECORDING,
     SET_ARM_MODE_SCHEMA,
@@ -57,14 +55,6 @@ async def async_setup_entry(
     async_add_entities(cameras)
 
     platform = entity_platform.current_platform.get()
-
-    # Not Active yet, as Enable does not work
-    # _LOGGER.debug("Creating Service: Enable/Disable Camera")
-    # platform.async_register_entity_service(
-    #     SERVICE_ENABLE_DISABLE_CAMERA,
-    #     ENABLE_DISABLE_CAMERA_SCHEMA,
-    #     "async_enable_disable_camera",
-    # )
 
     _LOGGER.debug("Creating Service: Set Arm Mode")
     platform.async_register_entity_service(
@@ -148,11 +138,6 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
             ATTR_PRESET_ID: self._schedule_presets,
             ATTR_PTZ_CAPABILITIES: self._device_data["ptz_capabilities"],
         }
-
-    async def async_enable_disable_camera(self, enabled):
-        """Enable/Disable camera."""
-        _LOGGER.debug("Setting Camera to enabled = %s", enabled)
-        await self.secspy.enable_camera(self._device_id, enabled)
 
     async def async_set_arm_mode(self, mode, enabled):
         """Set Arming Mode."""

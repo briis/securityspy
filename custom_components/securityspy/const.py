@@ -51,7 +51,6 @@ VALID_MODES = [
     RECORDING_TYPE_ACTION,
 ]
 SERVICE_DOWNLOAD_LATEST_MOTION_RECORDING = "download_latest_motion_recording"
-SERVICE_ENABLE_DISABLE_CAMERA = "enable_disable_camera"
 SERVICE_ENABLE_SCHEDULE_PRESET = "enable_schedule_preset"
 SERVICE_SET_ARM_MODE = "set_arm_mode"
 DOWNLOAD_LATEST_MOTION_RECORDING_SCHEMA = vol.Schema(
@@ -69,12 +68,6 @@ SET_ARM_MODE_SCHEMA = vol.Schema(
     {
         vol.Required(ATTR_ENTITY_ID): cv.entity_ids,
         vol.Required(CONF_MODE): vol.In(VALID_MODES),
-        vol.Required(CONF_ENABLED): cv.boolean,
-    }
-)
-ENABLE_DISABLE_CAMERA_SCHEMA = vol.Schema(
-    {
-        vol.Required(ATTR_ENTITY_ID): cv.entity_ids,
         vol.Required(CONF_ENABLED): cv.boolean,
     }
 )
