@@ -1,11 +1,22 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
-## Version 1.1.0
+## Version 1.1.0-beta.1
 
-Release date: NOT RELEASED
+Release date: 2021-12-20
+
+* `NEW`: Added partial support for PTZ. If a camera has PTZ capabilities, the following buttons will be created:
+  * `Left` button. When pressing this button the camera will start a left movement.
+  * `Right` button. When pressing this button the camera will start a right movement.
+  * `Up` button. When pressing this button the camera will start an upwards movement.
+  * `Down` button. When pressing this button the camera will start a downwardst movement.
+  * `Stop` button. When pressing this button the camera will stop any movement currently in progress.
+  * `Presets` buttons. For each Preset defined in SecuritySpy, a button will be created to activate that preset.
+
 
 * `FIXED`: Deprecation warning about `device_state_attributes` start showing up in Home Assistant 2021.12. This is now corrected and moved to the correct type.
+
 * `NEW`: Added configuration url for each camera on the *Devices* page, so that you can go directly from here to the Camera Settings page in SecuritySpy
+
 * `NEW`: **Breaking Change** As part of Home Assistant 2021.11 a new Entity Category is introduced. This makes it possible to classify an entity as either `config` or `diagnostic`. A `config` entity is used for entities that can change the configuration of a device and a `diagnostic` entity is used for devices that report status, but does not allow changes. These to entity categories have been applied to selected entities in this Integration.<br>
 Entities which have the entity_category set:
   * Are not included in a service call targetting a whole device or area.
