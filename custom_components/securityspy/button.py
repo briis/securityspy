@@ -12,6 +12,14 @@ from .entity import SecuritySpyEntity
 
 _LOGGER = logging.getLogger(__name__)
 
+_PTZ_STANDARDS = {
+    "Left": 1,
+    "Right": 2,
+    "Up": 3,
+    "Down": 4,
+    "Stop": 99,
+}
+
 
 async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities
@@ -27,15 +35,34 @@ async def async_setup_entry(
     sensors = []
     for device_id in secspy_data.data:
         device_data = secspy_data.data[device_id]
-        if device_data["ptz_capabilities"] > 0:
+        if int(device_data["ptz_capabilities"]) > 0:
+            preset_index = 12
             for preset in device_data["ptz_presets"]:
                 sensors.append(
                     SecuritySpyButtonEntity(
-                        secspy_object, secspy_data, server_info, device_id, preset
+                        secspy_object,
+                        secspy_data,
+                        server_info,
+                        device_id,
+                        preset,
+                        preset_index,
                     )
                 )
+                preset_index += 1
                 _LOGGER.debug(
                     "Adding Button Entity %s to Camera %s", preset, device_data["name"]
+                )
+            # Add Standrad Buttons to each ptz capable Camera
+            for std_preset in _PTZ_STANDARDS:
+                sensors.append(
+                    SecuritySpyButtonEntity(
+                        secspy_object,
+                        secspy_data,
+                        server_info,
+                        device_id,
+                        std_preset,
+                        _PTZ_STANDARDS[std_preset],
+                    )
                 )
 
     async_add_entities(sensors)
@@ -46,10 +73,19 @@ async def async_setup_entry(
 class SecuritySpyButtonEntity(SecuritySpyEntity, ButtonEntity):
     """A SecuritySpy Button entity."""
 
-    def __init__(self, secspy_object, secspy_data, server_info, device_id, preset_id):
+    def __init__(
+        self,
+        secspy_object,
+        secspy_data,
+        server_info,
+        device_id,
+        preset_id,
+        preset_index,
+    ):
         """Initialize the Button entity."""
         super().__init__(secspy_object, secspy_data, server_info, device_id, preset_id)
         self._preset_id = preset_id
+        self._preset_index = preset_index
         self._attr_name = f"{self._device_data['name']} {preset_id.capitalize()}"
         self._attr_device_class = ButtonDeviceClass.UPDATE
 
@@ -60,4 +96,9 @@ class SecuritySpyButtonEntity(SecuritySpyEntity, ButtonEntity):
         _LOGGER.debug(
             "Activating PTZ Preset %s for Camera %s", self._preset_id, self._device_id
         )
-        await self.secspy.set_ptz_preset(self._device_id, self._preset_id)
+        _preset_speed = 80
+        if self._preset_index < 12:
+            _preset_speed = 40
+        await self.secspy.set_ptz_preset(
+            self._device_id, self._preset_index, _preset_speed
+        )
