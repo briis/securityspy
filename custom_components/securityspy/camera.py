@@ -1,4 +1,5 @@
 """Camera definitions for SecuritySpy."""
+from __future__ import annotations
 
 import logging
 
@@ -81,7 +82,7 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
         self._stream_source = (
             None if disable_stream else self._device_data["live_stream"]
         )
-        self._last_image = None
+        self._last_image: bytes | None = None
         self._attr_supported_features = SUPPORT_STREAM if self._stream_source else 0
         self.stream_options[FFMPEG_OPTION_MAP[CONF_RTSP_TRANSPORT]] = "tcp"
 
@@ -168,7 +169,9 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
             return
         _LOGGER.debug("Motion Detection Disabled for Camera: %s", self._name)
 
-    async def async_camera_image(self):
+    async def async_camera_image(
+        self, width: int | None = None, height: int | None = None
+    ) -> bytes | None:
         """Return the Camera Image."""
         if self._device_data["event_online"]:
             last_image = await self.secspy.get_snapshot_image(self._device_id)
