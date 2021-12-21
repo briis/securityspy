@@ -1,5 +1,9 @@
 """Config Flow to configure SecuritySpy Integration."""
+from __future__ import annotations
+
 import logging
+import voluptuous as vol
+
 from homeassistant import config_entries
 from homeassistant.const import (
     CONF_HOST,
@@ -13,7 +17,6 @@ from homeassistant.helpers.aiohttp_client import async_create_clientsession
 from pysecspy.secspy_server import SecSpyServer
 from pysecspy.errors import InvalidCredentials, RequestError
 from pysecspy.const import SERVER_ID, SERVER_NAME
-import voluptuous as vol
 
 from .const import (
     CONF_DISABLE_RTSP,
@@ -29,7 +32,6 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a SecuritySpy config flow."""
 
     VERSION = 1
-    CONNECTION_CLASS = config_entries.CONN_CLASS_LOCAL_POLL
 
     @staticmethod
     @callback
@@ -66,7 +68,7 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             return await self._show_setup_form(errors)
 
         if server_info["server_version"] < MIN_SECSPY_VERSION:
-            _LOGGER.debug(
+            _LOGGER.error(
                 "This version of SecuritySpy is too old. Please upgrade to minimum V%s and try again.",
                 MIN_SECSPY_VERSION,
             )
@@ -74,12 +76,12 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             return await self._show_setup_form(errors)
 
         unique_id = server_info[SERVER_ID]
+        await self.async_set_unique_id(unique_id)
+        self._abort_if_unique_id_configured()
+
         server_name = server_info[SERVER_NAME]
         server_ip_address = server_info["server_ip_address"]
         id_name = f"{server_name} ({server_ip_address})"
-
-        await self.async_set_unique_id(unique_id)
-        self._abort_if_unique_id_configured()
 
         return self.async_create_entry(
             title=server_name,
@@ -89,7 +91,9 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                 CONF_PORT: user_input[CONF_PORT],
                 CONF_USERNAME: user_input.get(CONF_USERNAME),
                 CONF_PASSWORD: user_input.get(CONF_PASSWORD),
-                CONF_DISABLE_RTSP: user_input.get(CONF_DISABLE_RTSP),
+            },
+            options={
+                CONF_DISABLE_RTSP: False,
             },
         )
 
@@ -103,7 +107,6 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required(CONF_PORT, default=DEFAULT_PORT): int,
                     vol.Required(CONF_USERNAME): str,
                     vol.Required(CONF_PASSWORD): str,
-                    vol.Required(CONF_DISABLE_RTSP, default=False): bool,
                 }
             ),
             errors=errors or {},
@@ -141,7 +144,7 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                         CONF_PASSWORD,
                         default=self.config_entry.options.get(CONF_PASSWORD),
                     ): str,
-                    vol.Required(
+                    vol.Optional(
                         CONF_DISABLE_RTSP,
                         default=self.config_entry.options.get(CONF_DISABLE_RTSP, False),
                     ): bool,
