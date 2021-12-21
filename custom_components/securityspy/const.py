@@ -16,7 +16,7 @@ UNIQUE_ID = "unique_id"
 
 DEFAULT_PORT = 8000
 DEFAULT_ATTRIBUTION = "Powered by SecuritySpy Server"
-DEFAULT_BRAND = "@bensoftware"
+DEFAULT_BRAND = "Ben Software"
 MIN_SECSPY_VERSION = "5.3.4"
 
 CONF_MODE = "mode"
@@ -24,13 +24,10 @@ CONF_ENABLED = "enabled"
 CONF_DISABLE_RTSP = "disable_rtsp"
 
 ATTR_BRAND = "brand"
-ATTR_ENABLED = "enabled"
 ATTR_EVENT_LENGTH = "event_length"
 ATTR_EVENT_OBJECT = "event_object"
-ATTR_ONLINE = "online"
 ATTR_PRESET_ID = "preset_id"
 ATTR_PTZ_CAPABILITIES = "ptz_capabilities"
-ATTR_SENSITIVITY = "motion_sensitivity"
 
 DEVICE_TYPE_CAMERA = "camera"
 DEVICE_TYPE_DOORBELL = "doorbell"

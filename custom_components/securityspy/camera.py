@@ -12,8 +12,6 @@ from .const import (
     DOMAIN,
     DEFAULT_BRAND,
     DOWNLOAD_LATEST_MOTION_RECORDING_SCHEMA,
-    ATTR_ENABLED,
-    ATTR_ONLINE,
     ATTR_PRESET_ID,
     ATTR_PTZ_CAPABILITIES,
     RECORDING_TYPE_MOTION,
@@ -125,8 +123,6 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
 
         return {
             **super().extra_state_attributes,
-            ATTR_ONLINE: self._device_data["online"],
-            ATTR_ENABLED: self._device_data["enabled"],
             ATTR_LAST_TRIP_TIME: last_trip_time,
             ATTR_PRESET_ID: self._schedule_presets,
             ATTR_PTZ_CAPABILITIES: self._device_data["ptz_capabilities"],
