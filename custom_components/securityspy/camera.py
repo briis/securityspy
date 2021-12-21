@@ -50,7 +50,7 @@ async def async_setup_entry(
                 secspy_object, secspy_data, server_info, camera_id, disable_stream
             )
         )
-        _LOGGER.debug("SECURITYSPY CAMERA CREATED: %s", camera_id)
+        _LOGGER.debug("Adding Camera Id: %s", camera_id)
 
     async_add_entities(cameras)
 
@@ -70,8 +70,6 @@ async def async_setup_entry(
         "async_download_latest_motion_recording",
     )
 
-    return True
-
 
 class SecuritySpyCamera(SecuritySpyEntity, Camera):
     """A SecuritySpy Camera."""
@@ -86,18 +84,13 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
             None if disable_stream else self._device_data["live_stream"]
         )
         self._last_image = None
-        self._supported_features = SUPPORT_STREAM if self._stream_source else 0
+        self._attr_supported_features = SUPPORT_STREAM if self._stream_source else 0
         self.stream_options[FFMPEG_OPTION_MAP[CONF_RTSP_TRANSPORT]] = "tcp"
 
     @property
     def name(self):
         """Return the name of this camera."""
         return self._name
-
-    @property
-    def supported_features(self):
-        """Return supported features for this camera."""
-        return self._supported_features
 
     @property
     def motion_detection_enabled(self):
@@ -122,7 +115,7 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
                 self._device_data["recording_mode_c"]
                 or self._device_data["recording_mode_m"]
             )
-            and self._device_data["online"]
+            and self._device_data["event_online"]
         )
 
     @property
@@ -181,9 +174,10 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
 
     async def async_camera_image(self):
         """Return the Camera Image."""
-        last_image = await self.secspy.get_snapshot_image(self._device_id)
-        self._last_image = last_image
-        return self._last_image
+        if self._device_data["event_online"]:
+            last_image = await self.secspy.get_snapshot_image(self._device_id)
+            self._last_image = last_image
+            return self._last_image
 
     async def stream_source(self):
         """Return the Stream Source."""

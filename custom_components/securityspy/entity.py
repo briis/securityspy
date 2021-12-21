@@ -11,6 +11,7 @@ from .const import (
     DEFAULT_BRAND,
     DOMAIN,
 )
+from .data import SecuritySpyData
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -18,7 +19,14 @@ _LOGGER = logging.getLogger(__name__)
 class SecuritySpyEntity(Entity):
     """Base class for SecuritySpy entities."""
 
-    def __init__(self, secspy, secspy_data, server_info, device_id, sensor_type):
+    def __init__(
+        self,
+        secspy,
+        secspy_data: SecuritySpyData,
+        server_info,
+        device_id,
+        sensor_type,
+    ):
         """Initialize the entity."""
         super().__init__()
         self.secspy = secspy
@@ -36,25 +44,15 @@ class SecuritySpyEntity(Entity):
         self._model = self._device_data["model"]
         self._server_ip = server_info["server_ip_address"]
         self._server_port = server_info["server_port"]
+
+        self._attr_available = self.secspy_data.last_update_success
         if self._sensor_type is None:
-            self._unique_id = f"{self._device_id}_{self._server_id}"
+            self._attr_unique_id = f"{self._device_id}_{self._server_id}"
         else:
-            self._unique_id = f"{self._sensor_type}_{self._server_id}_{self._device_id}"
-
-    @property
-    def should_poll(self):
-        """Poll Cameras to update attributes."""
-        return False
-
-    @property
-    def unique_id(self):
-        """Return a unique ID."""
-        return self._unique_id
-
-    @property
-    def device_info(self) -> DeviceInfo:
-        """Return Device Info."""
-        return DeviceInfo(
+            self._attr_unique_id = (
+                f"{self._sensor_type}_{self._server_id}_{self._device_id}"
+            )
+        self._attr_device_info = DeviceInfo(
             connections={(dr.CONNECTION_NETWORK_MAC, self._mac)},
             name=self._device_name,
             manufacturer=DEFAULT_BRAND,
@@ -63,11 +61,6 @@ class SecuritySpyEntity(Entity):
             via_device=(DOMAIN, self._server_id),
             configuration_url=f"http://{self._server_ip}:{self._server_port}/camerasettings?cameraNum={self._device_id}",
         )
-
-    @property
-    def available(self):
-        """Return if entity is available."""
-        return self.secspy_data.last_update_success
 
     @property
     def extra_state_attributes(self):

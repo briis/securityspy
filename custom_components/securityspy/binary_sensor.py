@@ -22,15 +22,7 @@ from .const import (
     DOMAIN,
 )
 from .entity import SecuritySpyEntity
-
-_LOGGER = logging.getLogger(__name__)
-
-
-@dataclass
-class SecSpyRequiredKeysMixin:
-    """Mixin for required keys."""
-
-    trigger_field: str | None = None
+from .models import SecSpyRequiredKeysMixin
 
 
 @dataclass
@@ -52,11 +44,14 @@ BINARY_SENSORS: tuple[SecSpyBinaryEntityDescription, ...] = (
     ),
     SecSpyBinaryEntityDescription(
         key=_KEY_ONLINE,
+        icon="mdi:access-point-network",
         name="Online",
-        icon="mdi:ip-network",
         trigger_field="event_online",
     ),
 )
+
+
+_LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
@@ -91,8 +86,6 @@ async def async_setup_entry(
 
     async_add_entities(sensors)
 
-    return True
-
 
 class SecuritySpyBinarySensor(SecuritySpyEntity, BinarySensorEntity):
     """A SecuritySpy Binary Sensor."""
@@ -112,6 +105,7 @@ class SecuritySpyBinarySensor(SecuritySpyEntity, BinarySensorEntity):
         self._description = description
         self._attr_name = f"{self._device_data['name']} {self._description.name}"
         self._attr_device_class = self._description.device_class
+        self._attr_icon = self._description.icon
 
     @property
     def is_on(self):

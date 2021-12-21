@@ -1,8 +1,9 @@
 """ This component provides Switches for SecuritySpy."""
 
 import logging
+from dataclasses import dataclass
 
-from homeassistant.components.switch import SwitchEntity
+from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ENTITY_CATEGORY_CONFIG
 from homeassistant.core import HomeAssistant
@@ -14,34 +15,61 @@ from .const import (
     RECORDING_TYPE_MOTION,
 )
 from .entity import SecuritySpyEntity
+from .models import SecSpyRequiredKeysMixin
 
+
+@dataclass
+class SecSpyBinarySwitchDescription(SecSpyRequiredKeysMixin, SwitchEntityDescription):
+    """Describes SecuritySpy Switch entity."""
+
+
+SWITCH_ENTITIES: tuple[SecSpyBinarySwitchDescription, ...] = (
+    SecSpyBinarySwitchDescription(
+        key="enable_action",
+        name="Actions",
+        icon="mdi:script-text-play",
+        device_type=RECORDING_TYPE_ACTION,
+    ),
+    SecSpyBinarySwitchDescription(
+        key="record_motion",
+        name="Record Motion",
+        icon="mdi:motion-sensor",
+        device_type=RECORDING_TYPE_MOTION,
+    ),
+    SecSpyBinarySwitchDescription(
+        key="record_continuous",
+        name="Record Continuous",
+        icon="mdi:video",
+        device_type=RECORDING_TYPE_CONTINUOUS,
+    ),
+)
 _LOGGER = logging.getLogger(__name__)
 
-_SWITCH_NAME = 0
-_SWITCH_ICON = 1
-_SWITCH_TYPE = 2
-_SWITCH_REQUIRES = 3
+# _SWITCH_NAME = 0
+# _SWITCH_ICON = 1
+# _SWITCH_TYPE = 2
+# _SWITCH_REQUIRES = 3
 
-SWITCH_TYPES = {
-    "enable_action": [
-        "Actions",
-        "script-text-play",
-        RECORDING_TYPE_ACTION,
-        None,
-    ],
-    "record_motion": [
-        "Record Motion",
-        "motion-sensor",
-        RECORDING_TYPE_MOTION,
-        None,
-    ],
-    "record_continuous": [
-        "Record Continuous",
-        "video",
-        RECORDING_TYPE_CONTINUOUS,
-        None,
-    ],
-}
+# SWITCH_TYPES = {
+#     "enable_action": [
+#         "Actions",
+#         "script-text-play",
+#         RECORDING_TYPE_ACTION,
+#         None,
+#     ],
+#     "record_motion": [
+#         "Record Motion",
+#         "motion-sensor",
+#         RECORDING_TYPE_MOTION,
+#         None,
+#     ],
+#     "record_continuous": [
+#         "Record Continuous",
+#         "video",
+#         RECORDING_TYPE_CONTINUOUS,
+#         None,
+#     ],
+# }
 
 
 async def async_setup_entry(
@@ -56,67 +84,68 @@ async def async_setup_entry(
         return
 
     switches = []
-    for switch, switch_type in SWITCH_TYPES.items():
-        required_field = switch_type[_SWITCH_REQUIRES]
-
+    for description in SWITCH_ENTITIES:
         for device_id in secspy_data.data:
-            # Only Add Switches if Device supports it.
-            if required_field and not secspy_data.data[device_id].get(required_field):
-                continue
-
+            device_data = secspy_data.data[device_id]
             switches.append(
                 SecuritySpySwitch(
-                    secspy_object, secspy_data, server_info, device_id, switch
+                    secspy_object, secspy_data, server_info, device_id, description
                 )
             )
-            _LOGGER.debug("SECURITYSPY SWITCH CREATED: %s", switch)
+            _LOGGER.debug(
+                "Adding switch entity %s for Camera %s",
+                description.name,
+                device_data["name"],
+            )
 
     async_add_entities(switches, True)
-
-    return True
 
 
 class SecuritySpySwitch(SecuritySpyEntity, SwitchEntity):
     """A SecuritySpy Switch."""
 
-    def __init__(self, secspy_object, secspy_data, server_info, device_id, switch):
+    def __init__(
+        self,
+        secspy_object,
+        secspy_data,
+        server_info,
+        device_id,
+        description: SecSpyBinarySwitchDescription,
+    ):
         """Initialize a SecuritySpy Switch."""
-        super().__init__(secspy_object, secspy_data, server_info, device_id, switch)
-        switch_type = SWITCH_TYPES[switch]
-        self._name = f"{switch_type[_SWITCH_NAME]} {self._device_data['name']}"
-        self._icon = f"mdi:{switch_type[_SWITCH_ICON]}"
-        self._switch_type = switch_type[_SWITCH_TYPE]
+        super().__init__(
+            secspy_object, secspy_data, server_info, device_id, description.key
+        )
+        self._description = description
+        self._attr_name = f"{self._device_data['name']} {self._description.name}"
+        self._attr_icon = self._description.icon
         self._attr_entity_category = ENTITY_CATEGORY_CONFIG
 
-    @property
-    def name(self):
-        """Return the name of the device if any."""
-        return self._name
+        # switch_type = SWITCH_TYPES[switch]
+        # self._name = f"{switch_type[_SWITCH_NAME]} {self._device_data['name']}"
+        # self._icon = f"mdi:{switch_type[_SWITCH_ICON]}"
+        # self._switch_type = switch_type[_SWITCH_TYPE]
+        # self._attr_entity_category = ENTITY_CATEGORY_CONFIG
 
     @property
     def is_on(self):
         """Return true if device is on."""
-        if self._switch_type == RECORDING_TYPE_ACTION:
+        if self._description.device_type == RECORDING_TYPE_ACTION:
             return self._device_data["recording_mode_a"]
-        if self._switch_type == RECORDING_TYPE_MOTION:
+        if self._description.device_type == RECORDING_TYPE_MOTION:
             return self._device_data["recording_mode_m"]
-        if self._switch_type == RECORDING_TYPE_CONTINUOUS:
+        if self._description.device_type == RECORDING_TYPE_CONTINUOUS:
             return self._device_data["recording_mode_c"]
-
-    @property
-    def icon(self):
-        """Icon to use in the frontend, if any."""
-        return self._icon
 
     async def async_turn_on(self, **kwargs):
         """Turn the device on."""
-        if self._switch_type == RECORDING_TYPE_ACTION:
+        if self._description.device_type == RECORDING_TYPE_ACTION:
             _LOGGER.debug("Turning on Actions")
             await self.secspy.set_arm_mode(self._device_id, RECORDING_TYPE_ACTION, True)
-        if self._switch_type == RECORDING_TYPE_MOTION:
+        if self._description.device_type == RECORDING_TYPE_MOTION:
             _LOGGER.debug("Turning on Motion Recording")
             await self.secspy.set_arm_mode(self._device_id, RECORDING_TYPE_MOTION, True)
-        if self._switch_type == RECORDING_TYPE_CONTINUOUS:
+        if self._description.device_type == RECORDING_TYPE_CONTINUOUS:
             _LOGGER.debug("Turning on Continuous Recording")
             await self.secspy.set_arm_mode(
                 self._device_id, RECORDING_TYPE_CONTINUOUS, True
@@ -127,6 +156,8 @@ class SecuritySpySwitch(SecuritySpyEntity, SwitchEntity):
     async def async_turn_off(self, **kwargs):
         """Turn the device off."""
         _LOGGER.debug("Turning off Action or Recording")
-        await self.secspy.set_arm_mode(self._device_id, self._switch_type, False)
+        await self.secspy.set_arm_mode(
+            self._device_id, self._description.device_type, False
+        )
 
         await self.secspy_data.async_refresh(force_camera_update=True)

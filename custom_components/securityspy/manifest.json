@@ -10,7 +10,7 @@
         "@briis"
     ],
     "requirements": [
-        "git+https://github.com/briis/pysecspy.git@main#pysecspy==1.2.2"
+        "pysecspy==1.2.1"
     ],
     "iot_class": "local_push"
 }

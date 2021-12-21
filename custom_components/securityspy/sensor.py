@@ -1,9 +1,13 @@
 """ This component provides Sensors for SecuritySpy."""
+from dataclasses import dataclass
 import logging
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ENTITY_CATEGORY_DIAGNOSTIC
-from homeassistant.helpers.entity import Entity
+from homeassistant.components.sensor import (
+    SensorEntity,
+    SensorEntityDescription,
+)
 from homeassistant.core import HomeAssistant
 from .entity import SecuritySpyEntity
 
@@ -13,37 +17,35 @@ from .const import (
     RECORDING_TYPE_CONTINUOUS,
     RECORDING_TYPE_MOTION,
 )
+from .models import SecSpyRequiredKeysMixin
 
+
+@dataclass
+class SecuritySpyEntityDescription(SecSpyRequiredKeysMixin, SensorEntityDescription):
+    """Describes SecuritySpy Sensor entity."""
+
+
+SENSOR_ENTITIES: tuple[SecuritySpyEntityDescription, ...] = (
+    SecuritySpyEntityDescription(
+        key="motion_recording",
+        name="Motion Recording",
+        icon="mdi:video-outline",
+        device_type=RECORDING_TYPE_MOTION,
+    ),
+    SecuritySpyEntityDescription(
+        key="continuous_recording",
+        name="Continuous Recording",
+        icon="mdi:video-outline",
+        device_type=RECORDING_TYPE_CONTINUOUS,
+    ),
+    SecuritySpyEntityDescription(
+        key="actions",
+        name="Actions Enabled",
+        icon="mdi:script-text-play",
+        device_type=RECORDING_TYPE_ACTION,
+    ),
+)
 _LOGGER = logging.getLogger(__name__)
-
-SENSOR_TYPES = {
-    "motion_recording": [
-        "Motion Recording",
-        None,
-        ["video-outline", "video-off-outline"],
-        RECORDING_TYPE_MOTION,
-    ],
-    "continuous_recording": [
-        "Continuous Recording",
-        None,
-        ["video-outline", "video-off-outline"],
-        RECORDING_TYPE_CONTINUOUS,
-    ],
-    "actions": [
-        "Actions Enabled",
-        None,
-        ["script-text-play", "script-text"],
-        RECORDING_TYPE_ACTION,
-    ],
-}
-
-_SENSOR_NAME = 0
-_SENSOR_UNITS = 1
-_SENSOR_ICONS = 2
-_SENSOR_TYPE = 3
-
-_ICON_ON = 0
-_ICON_OFF = 1
 
 
 async def async_setup_entry(
@@ -58,60 +60,54 @@ async def async_setup_entry(
         return
 
     sensors = []
-    for sensor in SENSOR_TYPES:
+    for description in SENSOR_ENTITIES:
         for device_id in secspy_data.data:
+            device_data = secspy_data.data[device_id]
             sensors.append(
                 SecuritySpySensor(
-                    secspy_object, secspy_data, server_info, device_id, sensor
+                    secspy_object,
+                    secspy_data,
+                    server_info,
+                    device_id,
+                    description,
                 )
             )
-            _LOGGER.debug("SECURITYSPY SENSOR CREATED: %s", sensor)
+            _LOGGER.debug(
+                "Adding sensor entity %s for Camera %s",
+                description.name,
+                device_data["name"],
+            )
 
     async_add_entities(sensors)
 
-    return True
 
-
-class SecuritySpySensor(SecuritySpyEntity, Entity):
+class SecuritySpySensor(SecuritySpyEntity, SensorEntity):
     """A SecuritySpy Sensor."""
 
-    def __init__(self, secspy_object, secspy_data, server_info, device_id, sensor):
+    def __init__(
+        self,
+        secspy_object,
+        secspy_data,
+        server_info,
+        device_id,
+        description: SecuritySpyEntityDescription,
+    ):
         """Initialize an Unifi Protect sensor."""
-        super().__init__(secspy_object, secspy_data, server_info, device_id, sensor)
-        sensor_type = SENSOR_TYPES[sensor]
-        self._name = f"{sensor_type[_SENSOR_NAME]} {self._device_data['name']}"
-        self._units = sensor_type[_SENSOR_UNITS]
-        self._icons = sensor_type[_SENSOR_ICONS]
-        self._sensor_type = sensor_type[_SENSOR_TYPE]
+        super().__init__(
+            secspy_object, secspy_data, server_info, device_id, description.key
+        )
+        self._description = description
+        self._attr_name = f"{self._device_data['name']} {self._description.name}"
+        self._attr_icon = self._description.icon
         self._attr_entity_category = ENTITY_CATEGORY_DIAGNOSTIC
-
-    @property
-    def name(self):
-        """Return name of the sensor."""
-        return self._name
 
     @property
     def state(self):
         """Return the state of the sensor."""
-        if self._sensor_type == RECORDING_TYPE_ACTION:
+        if self._description.device_type == RECORDING_TYPE_ACTION:
             return self._device_data["recording_mode_a"]
-        if self._sensor_type == RECORDING_TYPE_CONTINUOUS:
+        if self._description.device_type == RECORDING_TYPE_CONTINUOUS:
             return self._device_data["recording_mode_c"]
-        if self._sensor_type == RECORDING_TYPE_MOTION:
+        if self._description.device_type == RECORDING_TYPE_MOTION:
             return self._device_data["recording_mode_m"]
-
-    @property
-    def icon(self):
-        """Icon to use in the frontend, if any."""
-        icon_id = _ICON_ON if self.state else _ICON_OFF
-        return f"mdi:{self._icons[icon_id]}"
-
-    @property
-    def unit_of_measurement(self):
-        """Return the units of measurement."""
-        return self._units
-
-    @property
-    def device_class(self):
-        """Return the device class of the sensor."""
         return None
