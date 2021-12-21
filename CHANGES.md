@@ -1,5 +1,12 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.1.0-beta.2
+
+Release date: Unreleased
+
+* `FIXED`: Ensuring the Websocket is properly closed before a restart of the Integration.
+* `FIXED`: Code clean-up.
+
 ## Version 1.1.0-beta.1
 
 Release date: 2021-12-20

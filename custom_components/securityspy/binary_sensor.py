@@ -1,10 +1,13 @@
 """ This component provides binary sensors for SecuritySpy."""
+from __future__ import annotations
+
+from dataclasses import dataclass
 import logging
 
 from homeassistant.components.binary_sensor import (
     DEVICE_CLASS_MOTION,
-    DEVICE_CLASS_OCCUPANCY,
     BinarySensorEntity,
+    BinarySensorEntityDescription,
 )
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
@@ -16,18 +19,44 @@ from homeassistant.core import HomeAssistant
 from .const import (
     ATTR_EVENT_LENGTH,
     ATTR_EVENT_OBJECT,
-    DEVICE_TYPE_DOORBELL,
-    DEVICE_TYPE_MOTION,
     DOMAIN,
 )
 from .entity import SecuritySpyEntity
 
 _LOGGER = logging.getLogger(__name__)
 
-SECSPY_TO_HASS_DEVICE_CLASS = {
-    DEVICE_TYPE_DOORBELL: DEVICE_CLASS_OCCUPANCY,
-    DEVICE_TYPE_MOTION: DEVICE_CLASS_MOTION,
-}
+
+@dataclass
+class SecSpyRequiredKeysMixin:
+    """Mixin for required keys."""
+
+    trigger_field: str | None = None
+
+
+@dataclass
+class SecSpyBinaryEntityDescription(
+    SecSpyRequiredKeysMixin, BinarySensorEntityDescription
+):
+    """Describes SecuritySpy Binary Sensor entity."""
+
+
+_KEY_ONLINE = "online"
+_KEY_MOTION = "motion"
+
+BINARY_SENSORS: tuple[SecSpyBinaryEntityDescription, ...] = (
+    SecSpyBinaryEntityDescription(
+        key=_KEY_MOTION,
+        name="Motion",
+        device_class=DEVICE_CLASS_MOTION,
+        trigger_field="event_on",
+    ),
+    SecSpyBinaryEntityDescription(
+        key=_KEY_ONLINE,
+        name="Online",
+        icon="mdi:ip-network",
+        trigger_field="event_online",
+    ),
+)
 
 
 async def async_setup_entry(
@@ -44,12 +73,21 @@ async def async_setup_entry(
     sensors = []
     for device_id in secspy_data.data:
         device_data = secspy_data.data[device_id]
-        sensors.append(
-            SecuritySpyBinarySensor(
-                secspy_object, secspy_data, server_info, device_id, DEVICE_TYPE_MOTION
+        for description in BINARY_SENSORS:
+            sensors.append(
+                SecuritySpyBinarySensor(
+                    secspy_object,
+                    secspy_data,
+                    server_info,
+                    device_id,
+                    description,
+                )
             )
-        )
-        _LOGGER.debug("SECURITYSPY MOTION SENSOR CREATED: %s", device_data["name"])
+            _LOGGER.debug(
+                "Adding binary sensor entity %s for Camera %s",
+                description.name,
+                device_data["name"],
+            )
 
     async_add_entities(sensors)
 
@@ -59,38 +97,37 @@ async def async_setup_entry(
 class SecuritySpyBinarySensor(SecuritySpyEntity, BinarySensorEntity):
     """A SecuritySpy Binary Sensor."""
 
-    def __init__(self, secspy_object, secspy_data, server_info, device_id, sensor_type):
+    def __init__(
+        self,
+        secspy_object,
+        secspy_data,
+        server_info,
+        device_id,
+        description: SecSpyBinaryEntityDescription,
+    ):
         """Initialize the Binary Sensor."""
         super().__init__(
-            secspy_object, secspy_data, server_info, device_id, sensor_type
+            secspy_object, secspy_data, server_info, device_id, description.key
         )
-        self._name = f"{sensor_type.capitalize()} {self._device_data['name']}"
-        self._device_class = SECSPY_TO_HASS_DEVICE_CLASS.get(sensor_type)
-        self._attr_entity_category = ENTITY_CATEGORY_DIAGNOSTIC
-
-    @property
-    def name(self):
-        """Return name of the sensor."""
-        return self._name
+        self._description = description
+        self._attr_name = f"{self._device_data['name']} {self._description.name}"
+        self._attr_device_class = self._description.device_class
 
     @property
     def is_on(self):
         """Return true if the binary sensor is on."""
-        if self._sensor_type != DEVICE_TYPE_DOORBELL:
-            return self._device_data["event_on"]
-        return self._device_data["event_ring_on"]
-
-    @property
-    def device_class(self):
-        """Return the device class of the sensor."""
-        return self._device_class
+        return self._device_data[self._description.trigger_field]
 
     @property
     def extra_state_attributes(self):
         """Return the device state attributes."""
+        if self._description.device_class == DEVICE_CLASS_MOTION:
+            return {
+                **super().extra_state_attributes,
+                ATTR_LAST_TRIP_TIME: self._device_data["last_motion"],
+                ATTR_EVENT_LENGTH: self._device_data["event_length"],
+                ATTR_EVENT_OBJECT: self._device_data["event_object"],
+            }
         return {
             **super().extra_state_attributes,
-            ATTR_LAST_TRIP_TIME: self._device_data["last_motion"],
-            ATTR_EVENT_LENGTH: self._device_data["event_length"],
-            ATTR_EVENT_OBJECT: self._device_data["event_object"],
         }
