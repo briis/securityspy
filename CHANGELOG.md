@@ -1,5 +1,12 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.1.0
+
+Release date: Unreleased
+
+* `CHANGED`: Removed the *online* attribute from the Camera Entity, as this is now replaced with the Binary Online sensor.
+
+
 ## Version 1.1.0-beta.2
 
 Release date: 2021-12-21
