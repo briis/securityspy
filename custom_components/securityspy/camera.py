@@ -174,7 +174,9 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
     ) -> bytes | None:
         """Return the Camera Image."""
         if self._device_data["event_online"]:
-            last_image = await self.secspy.get_snapshot_image(self._device_id)
+            last_image = await self.secspy.get_snapshot_image(
+                self._device_id, width, height
+            )
             self._last_image = last_image
             return self._last_image
 
