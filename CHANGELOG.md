@@ -2,10 +2,13 @@
 
 ## Version 1.1.0-beta.2
 
-Release date: Unreleased
+Release date: 2021-12-21
 
 * `FIXED`: Ensuring the Websocket is properly closed before a restart of the Integration.
 * `FIXED`: Code clean-up.
+* `NEW`: Added a new Binary Sensor for each Camera showing if the Camera is updated. This sensor is event driven, so as soon as SecuritySpy flags it as Offline the sensor will update and vice versa.
+* `CHANGED`: All entities have been updated to follow a more up to date coding practice for Home Assistant Integrations.
+
 
 ## Version 1.1.0-beta.1
 
