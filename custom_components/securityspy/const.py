@@ -22,6 +22,9 @@ MIN_SECSPY_VERSION = "5.3.4"
 CONF_MODE = "mode"
 CONF_ENABLED = "enabled"
 CONF_DISABLE_RTSP = "disable_rtsp"
+CONFIG_OPTIONS = [
+    CONF_DISABLE_RTSP,
+]
 
 ATTR_BRAND = "brand"
 ATTR_EVENT_LENGTH = "event_length"

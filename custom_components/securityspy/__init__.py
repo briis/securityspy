@@ -12,7 +12,7 @@ from homeassistant.const import (
     CONF_USERNAME,
     CONF_PASSWORD,
 )
-from homeassistant.core import HomeAssistant
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 import homeassistant.helpers.device_registry as dr
@@ -22,6 +22,7 @@ from pysecspy.const import SERVER_ID
 
 from .const import (
     CONF_DISABLE_RTSP,
+    CONFIG_OPTIONS,
     DEFAULT_BRAND,
     DOMAIN,
     SECURITYSPY_PLATFORMS,
@@ -34,31 +35,33 @@ from .data import SecuritySpyData
 _LOGGER = logging.getLogger(__name__)
 
 
+@callback
+def _async_import_options_from_data_if_missing(hass: HomeAssistant, entry: ConfigEntry):
+    options = dict(entry.options)
+    data = dict(entry.data)
+    modified = False
+    for importable_option in CONFIG_OPTIONS:
+        if importable_option not in entry.options and importable_option in entry.data:
+            options[importable_option] = entry.data[importable_option]
+            del data[importable_option]
+            modified = True
+
+    if modified:
+        hass.config_entries.async_update_entry(entry, data=data, options=options)
+
+
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up the SecuritySpy config entries."""
-
-    if not entry.options:
-        hass.config_entries.async_update_entry(
-            entry,
-            options={
-                CONF_HOST: entry.data.get(CONF_HOST),
-                CONF_PORT: entry.data.get(CONF_PORT),
-                CONF_USERNAME: entry.data.get(CONF_USERNAME),
-                CONF_PASSWORD: entry.data.get(CONF_PASSWORD),
-                CONF_DISABLE_RTSP: entry.data.get(CONF_DISABLE_RTSP, False),
-            },
-        )
+    _async_import_options_from_data_if_missing(hass, entry)
 
     session = async_create_clientsession(hass)
     securityspyserver = SecSpyServer(
         session,
-        entry.options[CONF_HOST],
-        entry.options[CONF_PORT],
-        entry.options[CONF_USERNAME],
-        entry.options[CONF_PASSWORD],
+        entry.data[CONF_HOST],
+        entry.data[CONF_PORT],
+        entry.data[CONF_USERNAME],
+        entry.data[CONF_PASSWORD],
     )
-
-    _LOGGER.debug("Connect to SecuritySpy")
 
     secspy_data = SecuritySpyData(hass, securityspyserver)
 
@@ -92,15 +95,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         "nvr": securityspyserver,
         "server_info": server_info,
         "update_listener": update_listener,
-        "disable_stream": entry.options[CONF_DISABLE_RTSP],
+        "disable_stream": entry.options.get(CONF_DISABLE_RTSP, False),
     }
 
     await _async_get_or_create_nvr_device_in_registry(hass, entry, server_info)
 
-    for platform in SECURITYSPY_PLATFORMS:
-        hass.async_create_task(
-            hass.config_entries.async_forward_entry_setup(entry, platform)
-        )
+    hass.config_entries.async_setup_platforms(entry, SECURITYSPY_PLATFORMS)
 
     async def async_enable_schedule_preset(service_entries):
         """Call Enable Schedule Preset Handler."""
@@ -150,13 +150,8 @@ async def _async_options_updated(hass: HomeAssistant, entry: ConfigEntry):
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload SecuritySpy config entry."""
-    unload_ok = all(
-        await asyncio.gather(
-            *[
-                hass.config_entries.async_forward_entry_unload(entry, component)
-                for component in SECURITYSPY_PLATFORMS
-            ]
-        )
+    unload_ok = await hass.config_entries.async_unload_platforms(
+        entry, SECURITYSPY_PLATFORMS
     )
 
     if unload_ok:
