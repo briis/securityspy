@@ -1,4 +1,5 @@
 """ This component provides Switches for SecuritySpy."""
+from __future__ import annotations
 
 import logging
 from dataclasses import dataclass
@@ -44,32 +45,6 @@ SWITCH_ENTITIES: tuple[SecSpyBinarySwitchDescription, ...] = (
     ),
 )
 _LOGGER = logging.getLogger(__name__)
-
-# _SWITCH_NAME = 0
-# _SWITCH_ICON = 1
-# _SWITCH_TYPE = 2
-# _SWITCH_REQUIRES = 3
-
-# SWITCH_TYPES = {
-#     "enable_action": [
-#         "Actions",
-#         "script-text-play",
-#         RECORDING_TYPE_ACTION,
-#         None,
-#     ],
-#     "record_motion": [
-#         "Record Motion",
-#         "motion-sensor",
-#         RECORDING_TYPE_MOTION,
-#         None,
-#     ],
-#     "record_continuous": [
-#         "Record Continuous",
-#         "video",
-#         RECORDING_TYPE_CONTINUOUS,
-#         None,
-#     ],
-# }
 
 
 async def async_setup_entry(
@@ -120,12 +95,6 @@ class SecuritySpySwitch(SecuritySpyEntity, SwitchEntity):
         self._attr_name = f"{self._device_data['name']} {self._description.name}"
         self._attr_icon = self._description.icon
         self._attr_entity_category = ENTITY_CATEGORY_CONFIG
-
-        # switch_type = SWITCH_TYPES[switch]
-        # self._name = f"{switch_type[_SWITCH_NAME]} {self._device_data['name']}"
-        # self._icon = f"mdi:{switch_type[_SWITCH_ICON]}"
-        # self._switch_type = switch_type[_SWITCH_TYPE]
-        # self._attr_entity_category = ENTITY_CATEGORY_CONFIG
 
     @property
     def is_on(self):

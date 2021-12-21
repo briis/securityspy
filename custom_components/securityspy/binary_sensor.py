@@ -12,7 +12,6 @@ from homeassistant.components.binary_sensor import (
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
     ATTR_LAST_TRIP_TIME,
-    ENTITY_CATEGORY_DIAGNOSTIC,
 )
 from homeassistant.core import HomeAssistant
 

@@ -1,4 +1,5 @@
 """Base class for securityspy data."""
+from __future__ import annotations
 
 import logging
 

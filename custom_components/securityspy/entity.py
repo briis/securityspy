@@ -1,4 +1,6 @@
 """Shared Entity definition for SecurotySpy Integration."""
+from __future__ import annotations
+
 import logging
 
 from homeassistant.const import ATTR_ATTRIBUTION
