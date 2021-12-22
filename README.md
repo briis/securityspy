@@ -1,13 +1,14 @@
 # SecuritySpy for Home Assistant
 ![GitHub release](https://img.shields.io/github/release/briis/securityspy.svg?style=flat-square) [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg?style=flat-square)](https://github.com/custom-components/hacs)
 
-This is a Home Assistant Integration for [Ben Softwares](https://www.bensoftware.com) SecuritySpy Surveillance system.
+This is a Home Assistant Integration for [Ben Software](https://www.bensoftware.com) SecuritySpy Surveillance system.
 
 Basically what this does, is integrating the Camera feeds from SecuritySpy in to Home Assistant, adds switches to adjust recording settings and adds Binary Motion Sensors to show if motion has occured. This project uses a *local push model* to get data from the SecuritySpy Server.
 
 There is support for the following devices types within Home Assistant:
 * Camera
 * Binary Sensor
+* Button
 * Sensor
 * Switch
 
@@ -42,12 +43,14 @@ Then, drop the following files into that folder:
 ```yaml
 __init__.py
 binary_sensor.py
+button.py
 camera.py
 config_flow.py
 const.py
 data.py
 entity.py
 manifest.json
+models.py
 sensor.py
 services.yaml
 strings.json
