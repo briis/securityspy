@@ -2,10 +2,37 @@
 
 ## Version 1.1.0
 
-Release date: Unreleased
+Release date: 2021-12-22
+
+This release contains **breaking changes** and you will have to re-define most of your settings in the UI and in automations after installation.
+
+### Upgrade Instructions
+
+Due to the many changes and entities that have been removed and replaced, we recommend the following process to upgrade from an earlier Beta or from an earlier release:
+
+- Upgrade the Integration files, either through HACS (Recommended) or by copying the files manually to your custom_components/securityspy directory.
+- Restart Home Assistant
+- Remove the SecuritySpy Integration by going to the Integrations page, click the 3 dots in the lower right corner of the SecuritySpy Integration and select Delete
+- While still on this page, click the + ADD INTEGRATION button in the lower right corner, search for SecuritySpy, and start the installation, supplying your credentials.
+
+### Changes
+
+and moved to the correct type.
+* `NEW`: Added a new Binary Sensor for each Camera showing if the Camera is updated. This sensor is event driven, so as soon as SecuritySpy flags it as Offline the sensor will update and vice versa.
+* `NEW`: Added configuration url for each camera on the *Devices* page, so that you can go directly from here to the Camera Settings page in SecuritySpy
+* `NEW`: Added partial support for PTZ. If a camera has PTZ capabilities, the following buttons will be created:
+  * `Left` button. When pressing this button the camera will start a left movement.
+  * `Right` button. When pressing this button the camera will start a right movement.
+  * `Up` button. When pressing this button the camera will start an upwards movement.
+  * `Down` button. When pressing this button the camera will start a downwardst movement.
+  * `Stop` button. When pressing this button the camera will stop any movement currently in progress.
+  * `Presets` buttons. For each Preset defined in SecuritySpy, a button will be created to activate that preset.
 
 * `CHANGED`: Removed the *online* attribute from the Camera Entity, as this is now replaced with the Binary Online sensor.
+* `CHANGED`: All entities have been updated to follow a more up to date coding practice for Home Assistant Integrations.
 
+* `FIXED`: Ensuring the Websocket is properly closed before a restart of the Integration.
+* `FIXED`: Deprecation warning about `device_state_attributes` start showing up in Home Assistant 2021.12. This is now corrected
 
 ## Version 1.1.0-beta.2
 
