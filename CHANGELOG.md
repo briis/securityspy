@@ -17,7 +17,6 @@ Due to the many changes and entities that have been removed and replaced, we rec
 
 ### Changes
 
-and moved to the correct type.
 * `NEW`: Added a new Binary Sensor for each Camera showing if the Camera is updated. This sensor is event driven, so as soon as SecuritySpy flags it as Offline the sensor will update and vice versa.
 * `NEW`: Added configuration url for each camera on the *Devices* page, so that you can go directly from here to the Camera Settings page in SecuritySpy
 * `NEW`: Added partial support for PTZ. If a camera has PTZ capabilities, the following buttons will be created:
@@ -32,7 +31,7 @@ and moved to the correct type.
 * `CHANGED`: All entities have been updated to follow a more up to date coding practice for Home Assistant Integrations.
 
 * `FIXED`: Ensuring the Websocket is properly closed before a restart of the Integration.
-* `FIXED`: Deprecation warning about `device_state_attributes` start showing up in Home Assistant 2021.12. This is now corrected
+* `FIXED`: Deprecation warning about `device_state_attributes` start showing up in Home Assistant 2021.12. This is now corrected and moved to the correct type.
 
 ## Version 1.1.0-beta.2
 
