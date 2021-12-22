@@ -83,6 +83,13 @@ If the Server is found on the network it will be added to your installation. Aft
 
 ## Automation Examples
 
+As part of the integration, we provide a couple of blueprints that you can use or extend to automate stuff.
+
+### Motion Notifications
+
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://github.com/briis/securityspy/blob/master/blueprints/push_notification_motion_event.yaml)
+
+
 Here are examples of different automations that can be used with this integration.
 
 ### Capture Image when Person is detected
