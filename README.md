@@ -87,7 +87,7 @@ As part of the integration, we provide a couple of blueprints that you can use o
 
 ### Motion Notifications
 
-[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://github.com/briis/securityspy/blob/37caeb8234988ee6dbf3f854358715d9dd556bb8/blueprints/push_notification_motion_event.yaml)
+[![Open your Home Assistant instance and show the blueprint import dialog with a specific blueprint pre-filled.](https://my.home-assistant.io/badges/blueprint_import.svg)](https://my.home-assistant.io/redirect/blueprint_import/?blueprint_url=https://raw.githubusercontent.com/briis/securityspy/37caeb8234988ee6dbf3f854358715d9dd556bb8/blueprints/push_notification_motion_event.yaml)
 
 
 Here are examples of different automations that can be used with this integration.
