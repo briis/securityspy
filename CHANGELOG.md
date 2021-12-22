@@ -4,7 +4,7 @@
 
 Release date: 2021-12-22
 
-This release contains **breaking changes** and you will have to re-define most of your settings in the UI and in automations after installation.
+## This release contains BREAKING CHANGES and you will have to re-define most of your settings in the UI and in automations after installation.
 
 ### Upgrade Instructions
 
