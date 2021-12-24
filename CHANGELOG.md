@@ -1,5 +1,14 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.1.1
+
+Release date: 2021-12-24
+
+- `NEW`: Added 2 more PTX Buttons
+  - `Zoom In` button. When pressing this button the camera will start to zoom in.
+  - `Zoom Out` button. When pressing this button the camera will start to zoom out.
+
+
 ## Version 1.1.0
 
 Release date: 2021-12-22
