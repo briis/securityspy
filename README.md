@@ -1,5 +1,5 @@
 # SecuritySpy for Home Assistant
-![GitHub release](https://img.shields.io/github/release/briis/securityspy.svg?style=flat-square) [![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg?style=flat-square)](https://github.com/custom-components/hacs)
+![GitHub release](https://img.shields.io/github/release/briis/securityspy.svg?style=flat-square) [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=flat-square)](https://github.com/custom-components/hacs)
 
 This is a Home Assistant Integration for [Ben Software](https://www.bensoftware.com) SecuritySpy Surveillance system.
 
@@ -31,7 +31,11 @@ Before you install this Integration you need to ensure that the following settin
 ## Installation
 
 ### HACS Installation
-This Integration is not part of the default HACS store yet. You can add is a Customer Integration in HACS by adding `https://github.com/briis/securityspy` to HACS under settings.
+This Integration is part of the default HACS store. Search for *securityspy* under *Integrations* and install from there. After the installation of the files you must restart Home Assistant, or else you will not be able to add SecuritySpy from the Integration Page.
+
+If you are not familiar with HACS, or haven't installed it, we would recommend to [look through the HACS documentation](https://hacs.xyz/), before continuing. Even though you can install the Integration manually, we recommend using HACS, as you would always be reminded when a new release is published.
+
+**Please note**: All HACS does, is copying the needed files to Home Assistant, and placing them in the right directory. To get the Integration to work, you now need to go through the steps in the *Configuration* section.
 
 ### Manual Installation
 
