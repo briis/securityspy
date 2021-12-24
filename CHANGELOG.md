@@ -4,7 +4,7 @@
 
 Release date: 2021-12-24
 
-- `NEW`: Added 2 more PTX Buttons
+- `NEW`: Added 2 more PTZ Buttons
   - `Zoom In` button. When pressing this button the camera will start to zoom in.
   - `Zoom Out` button. When pressing this button the camera will start to zoom out.
 
