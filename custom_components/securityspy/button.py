@@ -17,6 +17,8 @@ _PTZ_STANDARDS = {
     "Right": 2,
     "Up": 3,
     "Down": 4,
+    "Zoom In": 5,
+    "Zoom Out": 6,
     "Stop": 99,
 }
 
@@ -53,15 +55,15 @@ async def async_setup_entry(
                     "Adding Button Entity %s to Camera %s", preset, device_data["name"]
                 )
             # Add Standrad Buttons to each ptz capable Camera
-            for std_preset in _PTZ_STANDARDS:
+            for name, std_preset in _PTZ_STANDARDS.items():
                 sensors.append(
                     SecuritySpyButtonEntity(
                         secspy_object,
                         secspy_data,
                         server_info,
                         device_id,
+                        name,
                         std_preset,
-                        _PTZ_STANDARDS[std_preset],
                     )
                 )
 
@@ -94,7 +96,7 @@ class SecuritySpyButtonEntity(SecuritySpyEntity, ButtonEntity):
         """Press the button."""
 
         _LOGGER.debug(
-            "Activating PTZ Preset %s for Camera %s", self._preset_id, self._device_id
+            "Activating PTZ command %s for Camera %s", self._preset_id, self._device_id
         )
         _preset_speed = 80
         if self._preset_index < 12:
