@@ -6,5 +6,5 @@ RUN apt update \
     && cd /opt \
     && git clone --depth=1 -b dev https://github.com/home-assistant/core.git hass \
     && python3 -m pip --disable-pip-version-check install --upgrade ./hass \
-    && python3 -m pip install flake8 \
+    && python3 -m pip install pysecspy black isort pyupgrade pylint pylint_strict_informational \
     && ln -s /workspaces/securityspy/custom_components/securityspy /opt/hass/homeassistant/components/securityspy
