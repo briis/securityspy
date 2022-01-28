@@ -1,5 +1,12 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.1.2
+
+Release date: Unreleased
+
+- `NEW`: Added a new sensor per Camera called `sensor.CAMERA_NAME_detected_object`. On motion detection this will change the state to either `Human` or `Vehicle` if one of these objects are detected. You can use this sensor to only run automations if a Person or a Car is detected on motion.
+
+
 ## Version 1.1.1
 
 Release date: 2021-12-24
