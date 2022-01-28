@@ -14,6 +14,7 @@ from homeassistant.core import HomeAssistant
 from .entity import SecuritySpyEntity
 
 from .const import (
+    DEVICE_CLASS_DETECTION,
     DOMAIN,
     RECORDING_TYPE_ACTION,
     RECORDING_TYPE_CONTINUOUS,
@@ -45,6 +46,12 @@ SENSOR_ENTITIES: tuple[SecuritySpyEntityDescription, ...] = (
         name="Actions Enabled",
         icon="mdi:script-text-play",
         device_type=RECORDING_TYPE_ACTION,
+    ),
+    SecuritySpyEntityDescription(
+        key="detected_object",
+        name="Detected Object",
+        icon="mdi:selection-search",
+        device_type=DEVICE_CLASS_DETECTION,
     ),
 )
 _LOGGER = logging.getLogger(__name__)
@@ -112,4 +119,6 @@ class SecuritySpySensor(SecuritySpyEntity, SensorEntity):
             return self._device_data["recording_mode_c"]
         if self._description.device_type == RECORDING_TYPE_MOTION:
             return self._device_data["recording_mode_m"]
+        if self._description.device_type == DEVICE_CLASS_DETECTION:
+            return self._device_data["event_object"]
         return None

@@ -32,6 +32,8 @@ ATTR_EVENT_OBJECT = "event_object"
 ATTR_PRESET_ID = "preset_id"
 ATTR_PTZ_CAPABILITIES = "ptz_capabilities"
 
+DEVICE_CLASS_DETECTION = "securityspy__detection"
+
 DEVICE_TYPE_CAMERA = "camera"
 DEVICE_TYPE_DOORBELL = "doorbell"
 DEVICE_TYPE_LOCAL = "local"
