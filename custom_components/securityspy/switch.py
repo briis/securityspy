@@ -6,8 +6,8 @@ from dataclasses import dataclass
 
 from homeassistant.components.switch import SwitchEntity, SwitchEntityDescription
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import ENTITY_CATEGORY_CONFIG
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import EntityCategory
 
 from .const import (
     DOMAIN,
@@ -94,7 +94,7 @@ class SecuritySpySwitch(SecuritySpyEntity, SwitchEntity):
         self._description = description
         self._attr_name = f"{self._device_data['name']} {self._description.name}"
         self._attr_icon = self._description.icon
-        self._attr_entity_category = ENTITY_CATEGORY_CONFIG
+        self._attr_entity_category = EntityCategory.CONFIG
 
     @property
     def is_on(self):

@@ -5,12 +5,12 @@ from dataclasses import dataclass
 import logging
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import ENTITY_CATEGORY_DIAGNOSTIC
 from homeassistant.components.sensor import (
     SensorEntity,
     SensorEntityDescription,
 )
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import EntityCategory
 from .entity import SecuritySpyEntity
 
 from .const import (
@@ -108,10 +108,10 @@ class SecuritySpySensor(SecuritySpyEntity, SensorEntity):
         self._description = description
         self._attr_name = f"{self._device_data['name']} {self._description.name}"
         self._attr_icon = self._description.icon
-        self._attr_entity_category = ENTITY_CATEGORY_DIAGNOSTIC
+        self._attr_entity_category = EntityCategory.DIAGNOSTIC
 
     @property
-    def state(self):
+    def native_value(self):
         """Return the state of the sensor."""
         if self._description.device_type == RECORDING_TYPE_ACTION:
             return self._device_data["recording_mode_a"]
