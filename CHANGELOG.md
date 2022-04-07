@@ -1,9 +1,10 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
-## Version 1.1.2
+## Version 1.1.3
 
-Release date: Unreleased
+Release date: 2022-04-07
 
+- `FIXED`: Issue [#37](https://github.com/briis/securityspy/issues/37) Ensures that Switches and Sensors are being loaded correctly after upgrade to 2022.4 of Home Assistant.
 - `NEW`: Added a new sensor per Camera called `sensor.CAMERA_NAME_detected_object`. On motion detection this will change the state to either `Human` or `Vehicle` if one of these objects are detected. You can use this sensor to only run automations if a Person or a Car is detected on motion.
 
 
