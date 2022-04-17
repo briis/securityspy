@@ -1,5 +1,12 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.1.4
+
+Release date: Not released
+
+- `NEW`: Added an `event_score` attribute to the binary motion sensor, that shows the percentage probability of the object being detected. Currently this will only show one score for either Human or Vehicle, depending on which is highest.
+
+
 ## Version 1.1.3
 
 Release date: 2022-04-07
