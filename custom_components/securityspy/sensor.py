@@ -14,6 +14,7 @@ from homeassistant.helpers.entity import EntityCategory
 from .entity import SecuritySpyEntity
 
 from .const import (
+    ATTR_EVENT_SCORE,
     DEVICE_CLASS_DETECTION,
     DOMAIN,
     RECORDING_TYPE_ACTION,
@@ -122,3 +123,15 @@ class SecuritySpySensor(SecuritySpyEntity, SensorEntity):
         if self._description.device_type == DEVICE_CLASS_DETECTION:
             return self._device_data["event_object"]
         return None
+
+    @property
+    def extra_state_attributes(self):
+        """Return the device state attributes."""
+        if self._description.device_type == DEVICE_CLASS_DETECTION:
+            return {
+                **super().extra_state_attributes,
+                ATTR_EVENT_SCORE: self._device_data["event_score"],
+            }
+        return {
+            **super().extra_state_attributes,
+        }
