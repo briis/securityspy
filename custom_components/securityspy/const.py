@@ -29,6 +29,7 @@ CONFIG_OPTIONS = [
 ATTR_BRAND = "brand"
 ATTR_EVENT_LENGTH = "event_length"
 ATTR_EVENT_OBJECT = "event_object"
+ATTR_EVENT_SCORE = "event_score"
 ATTR_PRESET_ID = "preset_id"
 ATTR_PTZ_CAPABILITIES = "ptz_capabilities"
 
