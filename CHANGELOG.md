@@ -2,7 +2,7 @@
 
 ## Version 1.1.4-beta.1
 
-Release date: Not released
+Release date: 2022-04-17
 
 - `NEW`: Added an `event_score` attribute to the binary motion sensor and the detected oject sensor, that shows the percentage probability of the object being detected. Currently this will only show one score for either Human or Vehicle, depending on which is highest.
 
