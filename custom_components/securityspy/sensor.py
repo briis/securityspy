@@ -14,7 +14,8 @@ from homeassistant.helpers.entity import EntityCategory
 from .entity import SecuritySpyEntity
 
 from .const import (
-    ATTR_EVENT_SCORE,
+    ATTR_EVENT_SCORE_HUMAN,
+    ATTR_EVENT_SCORE_VEHICLE,
     DEVICE_CLASS_DETECTION,
     DOMAIN,
     RECORDING_TYPE_ACTION,
@@ -130,7 +131,8 @@ class SecuritySpySensor(SecuritySpyEntity, SensorEntity):
         if self._description.device_type == DEVICE_CLASS_DETECTION:
             return {
                 **super().extra_state_attributes,
-                ATTR_EVENT_SCORE: self._device_data["event_score"],
+                ATTR_EVENT_SCORE_HUMAN: self._device_data["event_score_human"],
+                ATTR_EVENT_SCORE_VEHICLE: self._device_data["event_score_vehicle"],
             }
         return {
             **super().extra_state_attributes,
