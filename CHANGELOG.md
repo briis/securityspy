@@ -5,6 +5,7 @@
 Release date: Not Released
 
 - `NEW`: Added an `event_score_human` and `event_score_vehicle` attributes to the binary motion sensor and the detected oject sensor, that shows the percentage probability of the object being detected. The `event_object` will still hold the object that has the highest score of the two, but if you only want to look for a person moving, you can check on the `event_score_human` value. Closing <Issue [#38](https://github.com/briis/securityspy/issues/38)>
+- `FIXED`: Fixing deprecated `async_get_registry` for HA 2022.6
 
 ## Version 1.1.4-beta.2
 
