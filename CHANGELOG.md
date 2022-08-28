@@ -1,5 +1,12 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.1.5
+
+Release date: 2022-08-28
+
+- `NEW`: Added an `event_score_animal` attribute to the binary motion sensor and the detected oject sensor, that shows the percentage probability of the object being an animal. Closing Issue [#42](https://github.com/briis/securityspy/issues/42)
+**Please Note:** This attribute will only work if your SecuritySpy version is 5.5.0 or greater. If not on this version, it will always be 0.
+
 ## Version 1.1.4
 
 Release date: 2022-05-26
