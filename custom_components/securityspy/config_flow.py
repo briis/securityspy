@@ -137,12 +137,12 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                         CONF_DISABLE_RTSP,
                         default=self.config_entry.options.get(CONF_DISABLE_RTSP, False),
                     ): bool,
-                    vol.Optional(
-                        CONF_MIN_SCORE,
-                        default=self.config_entry.options.get(
-                            CONF_MIN_SCORE, DEFAULT_MIN_SCORE
-                        ),
-                    ): vol.All(vol.Coerce(int), vol.Range(min=20, max=100)),
+                    # vol.Optional(
+                    #     CONF_MIN_SCORE,
+                    #     default=self.config_entry.options.get(
+                    #         CONF_MIN_SCORE, DEFAULT_MIN_SCORE
+                    #     ),
+                    # ): vol.All(vol.Coerce(int), vol.Range(min=20, max=100)),
                 }
             ),
         )
