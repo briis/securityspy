@@ -18,6 +18,7 @@ from homeassistant.core import HomeAssistant
 from .const import (
     ATTR_EVENT_LENGTH,
     ATTR_EVENT_OBJECT,
+    ATTR_EVENT_SCORE_ANIMAL,
     ATTR_EVENT_SCORE_HUMAN,
     ATTR_EVENT_SCORE_VEHICLE,
     DOMAIN,
@@ -122,8 +123,9 @@ class SecuritySpyBinarySensor(SecuritySpyEntity, BinarySensorEntity):
                 ATTR_LAST_TRIP_TIME: self._device_data["last_motion"],
                 ATTR_EVENT_LENGTH: self._device_data["event_length"],
                 ATTR_EVENT_OBJECT: self._device_data["event_object"],
-                ATTR_EVENT_SCORE_HUMAN: self._device_data["event_score_human"],
-                ATTR_EVENT_SCORE_VEHICLE: self._device_data["event_score_vehicle"],
+                ATTR_EVENT_SCORE_ANIMAL: self._device_data[ATTR_EVENT_SCORE_ANIMAL],
+                ATTR_EVENT_SCORE_HUMAN: self._device_data[ATTR_EVENT_SCORE_HUMAN],
+                ATTR_EVENT_SCORE_VEHICLE: self._device_data[ATTR_EVENT_SCORE_VEHICLE],
             }
         return {
             **super().extra_state_attributes,
