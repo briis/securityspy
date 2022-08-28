@@ -23,8 +23,10 @@ from pysecspy.const import SERVER_ID
 
 from .const import (
     CONF_DISABLE_RTSP,
+    CONF_MIN_SCORE,
     CONFIG_OPTIONS,
     DEFAULT_BRAND,
+    DEFAULT_MIN_SCORE,
     DOMAIN,
     SECURITYSPY_PLATFORMS,
     SERVICE_ENABLE_SCHEDULE_PRESET,
@@ -62,6 +64,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         entry.data[CONF_PORT],
         entry.data[CONF_USERNAME],
         entry.data[CONF_PASSWORD],
+        entry.options.get(CONF_MIN_SCORE, DEFAULT_MIN_SCORE),
     )
 
     secspy_data = SecuritySpyData(hass, securityspyserver)

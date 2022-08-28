@@ -20,7 +20,9 @@ from pysecspy.const import SERVER_ID, SERVER_NAME
 
 from .const import (
     CONF_DISABLE_RTSP,
+    CONF_MIN_SCORE,
     DEFAULT_PORT,
+    DEFAULT_MIN_SCORE,
     MIN_SECSPY_VERSION,
     DOMAIN,
 )
@@ -54,6 +56,7 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             user_input[CONF_PORT],
             user_input[CONF_USERNAME],
             user_input[CONF_PASSWORD],
+            DEFAULT_MIN_SCORE,
         )
 
         try:
@@ -94,6 +97,7 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             },
             options={
                 CONF_DISABLE_RTSP: False,
+                CONF_MIN_SCORE: DEFAULT_MIN_SCORE,
             },
         )
 
@@ -129,25 +133,16 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
             step_id="init",
             data_schema=vol.Schema(
                 {
-                    vol.Required(
-                        CONF_HOST, default=self.config_entry.options.get(CONF_HOST)
-                    ): str,
-                    vol.Required(
-                        CONF_PORT,
-                        default=self.config_entry.options.get(CONF_PORT, DEFAULT_PORT),
-                    ): int,
-                    vol.Required(
-                        CONF_USERNAME,
-                        default=self.config_entry.options.get(CONF_USERNAME),
-                    ): str,
-                    vol.Required(
-                        CONF_PASSWORD,
-                        default=self.config_entry.options.get(CONF_PASSWORD),
-                    ): str,
                     vol.Optional(
                         CONF_DISABLE_RTSP,
                         default=self.config_entry.options.get(CONF_DISABLE_RTSP, False),
                     ): bool,
+                    vol.Optional(
+                        CONF_MIN_SCORE,
+                        default=self.config_entry.options.get(
+                            CONF_MIN_SCORE, DEFAULT_MIN_SCORE
+                        ),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=20, max=100)),
                 }
             ),
         )

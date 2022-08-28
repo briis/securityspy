@@ -26,11 +26,8 @@
         "step": {
             "init": {
                 "data": {
-                    "host": "IP Address of SecuritySpy Server",
-                    "port": "Http Port Number",
-                    "username": "Username",
-                    "password": "Password",
-                    "disable_rtsp": "Disable the RTSP stream"
+                    "disable_rtsp": "Disable the RTSP stream",
+                    "min_event_score": "Minimum score for classifying an object. (Default 50)"
                 }
             }
         }

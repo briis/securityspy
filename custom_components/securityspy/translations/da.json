@@ -26,11 +26,8 @@
         "step": {
             "init": {
                 "data": {
-                    "host": "IP adresse på SecuritySpy Serveren",
-                    "port": "Http Port nummer",
-                    "username": "Brugernavn",
-                    "password": "Kodeord",
-                    "disable_rtsp": "Brug ikke RTSP stream"
+                    "disable_rtsp": "Brug ikke RTSP stream",
+                    "min_event_score": "Minimum værdi før der klassificeres et object. (Standard 50)"
                 }
             }
         }
