@@ -5,7 +5,7 @@ from dataclasses import dataclass
 import logging
 
 from homeassistant.components.binary_sensor import (
-    DEVICE_CLASS_MOTION,
+    BinarySensorDeviceClass,
     BinarySensorEntity,
     BinarySensorEntityDescription,
 )
@@ -41,7 +41,7 @@ BINARY_SENSORS: tuple[SecSpyBinaryEntityDescription, ...] = (
     SecSpyBinaryEntityDescription(
         key=_KEY_MOTION,
         name="Motion",
-        device_class=DEVICE_CLASS_MOTION,
+        device_class=BinarySensorDeviceClass.MOTION,
         trigger_field="event_on",
     ),
     SecSpyBinaryEntityDescription(
@@ -117,7 +117,7 @@ class SecuritySpyBinarySensor(SecuritySpyEntity, BinarySensorEntity):
     @property
     def extra_state_attributes(self):
         """Return the device state attributes."""
-        if self._description.device_class == DEVICE_CLASS_MOTION:
+        if self._description.device_class == BinarySensorDeviceClass.MOTION:
             return {
                 **super().extra_state_attributes,
                 ATTR_LAST_TRIP_TIME: self._device_data["last_motion"],
