@@ -1,5 +1,11 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.1.6
+
+Release date: 2023-01-04
+
+- `FIXED`: Moving from deprecated DEVICE_CLASS_* to supported Device Class Enums
+
 ## Version 1.1.5
 
 Release date: 2022-08-28
