@@ -1,5 +1,11 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.1.7
+
+Release date: 2023-02-04
+
+- `FIXED`: Issue [#47](https://github.com/briis/securityspy/issues/47) Detected integration that called async_setup_platforms. This call has now been replaced by the proper new function.
+
 ## Version 1.1.6
 
 Release date: 2023-01-04
