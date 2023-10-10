@@ -1,6 +1,11 @@
 # SecuritySpy for Home Assistant
 ![GitHub release](https://img.shields.io/github/release/briis/securityspy.svg?style=flat-square) [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=flat-square)](https://github.com/hacs/integration)
 
+## LOOKING FOR A NEW MAINTAINER
+I am no longer running SecuritySpy so I have no access to the Software anymore. I am looking for someone to take over the code, as I will not make any changes to it. If noone is found, I will Archieve this Reporsitory and remove it from the Default HACS store. Sorry for any inconviniance this may cause.
+
+## Overview
+
 This is a Home Assistant Integration for [Ben Software](https://www.bensoftware.com)'s SecuritySpy Surveillance system.
 
 Basically what this does, is integrating the Camera feeds from SecuritySpy in to Home Assistant, adds switches to adjust recording settings and adds Binary Motion Sensors to show if motion has occured. This project uses a *local push model* to get data from the SecuritySpy Server.
