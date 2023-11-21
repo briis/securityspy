@@ -6,7 +6,7 @@ import logging
 from homeassistant.const import ATTR_ATTRIBUTION
 import homeassistant.helpers.device_registry as dr
 from homeassistant.helpers.entity import Entity, DeviceInfo
-from pysecspy.secspy import SecSpyServerData
+from pysecspy.secspy import SecSpyServerData, SecuritySpy
 from .const import (
     ATTR_BRAND,
     DEFAULT_ATTRIBUTION,
@@ -23,7 +23,7 @@ class SecuritySpyEntity(Entity):
 
     def __init__(
         self,
-        secspy,
+        secspy: SecuritySpy,
         secspy_data: SecuritySpyData,
         server_info: SecSpyServerData,
         device_id,
