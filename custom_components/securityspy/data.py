@@ -4,16 +4,14 @@ from __future__ import annotations
 import logging
 
 from homeassistant.core import callback
-
-from pysecspy.errors import RequestError
+from pysecspy.secspy import RequestError, SecuritySpy
 
 _LOGGER = logging.getLogger(__name__)
-
 
 class SecuritySpyData:
     """Coordinate updates."""
 
-    def __init__(self, hass, secspyserver):
+    def __init__(self, hass, secspyserver: SecuritySpy):
         """Initialize an subscriber."""
         super().__init__()
         self._hass = hass
@@ -35,7 +33,7 @@ class SecuritySpyData:
         if self._unsub_websocket:
             self._unsub_websocket()
             self._unsub_websocket = None
-        await self._secspyserver.async_disconnect_ws()
+        await self._secspyserver.stop_listening()
 
     async def async_refresh(self, *_, force_camera_update=False):
         """Update the data."""

@@ -17,9 +17,12 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryNotReady
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
 import homeassistant.helpers.device_registry as dr
-from pysecspy.errors import InvalidCredentials, RequestError
-from pysecspy.secspy_server import SecSpyServer
-from pysecspy.const import SERVER_ID
+from pysecspy.secspy import (
+    SecuritySpy,
+    SecSpyServerData,
+    InvalidCredentials,
+    RequestError,
+)
 
 from .const import (
     CONF_DISABLE_RTSP,
@@ -33,6 +36,7 @@ from .const import (
     ENABLE_SCHEDULE_PRESET_SCHEMA,
     MIN_SECSPY_VERSION,
 )
+
 from .data import SecuritySpyData
 
 _LOGGER = logging.getLogger(__name__)
@@ -58,26 +62,26 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     _async_import_options_from_data_if_missing(hass, entry)
 
     session = async_create_clientsession(hass)
-    securityspyserver = SecSpyServer(
-        session,
-        entry.data[CONF_HOST],
-        entry.data[CONF_PORT],
-        entry.data[CONF_USERNAME],
-        entry.data[CONF_PASSWORD],
-        entry.options.get(CONF_MIN_SCORE, DEFAULT_MIN_SCORE),
+    securityspyserver = SecuritySpy(
+        session=session,
+        host=entry.data[CONF_HOST],
+        port=entry.data[CONF_PORT],
+        username=entry.data[CONF_USERNAME],
+        password=entry.data[CONF_PASSWORD],
+        min_classify_score=entry.options.get(CONF_MIN_SCORE, DEFAULT_MIN_SCORE),
     )
 
     secspy_data = SecuritySpyData(hass, securityspyserver)
 
     try:
-        server_info = await securityspyserver.get_server_information()
+        server_info: SecSpyServerData = await securityspyserver.get_server_information()
     except InvalidCredentials as unauthex:
         _LOGGER.error("Could not authorize against SecuritySpy. Error: %s.", unauthex)
         return False
     except (RequestError, ServerDisconnectedError) as notreadyerror:
         raise ConfigEntryNotReady from notreadyerror
 
-    if server_info["server_version"] < MIN_SECSPY_VERSION:
+    if server_info.version < MIN_SECSPY_VERSION:
         _LOGGER.error(
             "This version of SecuritySpy is too old. Please upgrade to minimum V%s and try again.",
             MIN_SECSPY_VERSION,
@@ -85,7 +89,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         return False
 
     if entry.unique_id is None:
-        hass.config_entries.async_update_entry(entry, unique_id=server_info[SERVER_ID])
+        hass.config_entries.async_update_entry(entry, unique_id=server_info.uuid)
 
     await secspy_data.async_setup()
     if not secspy_data.last_update_success:
@@ -105,8 +109,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     await _async_get_or_create_nvr_device_in_registry(hass, entry, server_info)
     await hass.config_entries.async_forward_entry_setups(entry, SECURITYSPY_PLATFORMS)
 
-    # hass.config_entries.async_setup_platforms(entry, SECURITYSPY_PLATFORMS)
-
     async def async_enable_schedule_preset(service_entries):
         """Call Enable Schedule Preset Handler."""
         await async_handle_enable_schedule_preset(hass, entry, service_entries)
@@ -123,17 +125,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def _async_get_or_create_nvr_device_in_registry(
-    hass: HomeAssistant, entry: ConfigEntry, nvr
+    hass: HomeAssistant, entry: ConfigEntry, nvr: SecSpyServerData
 ) -> None:
     device_registry = dr.async_get(hass)
     device_registry.async_get_or_create(
         config_entry_id=entry.entry_id,
-        connections={(dr.CONNECTION_NETWORK_MAC, nvr["server_id"])},
-        identifiers={(DOMAIN, nvr["server_id"])},
+        connections={(dr.CONNECTION_NETWORK_MAC, nvr.uuid)},
+        identifiers={(DOMAIN, nvr.uuid)},
         manufacturer=DEFAULT_BRAND,
         name=entry.data[CONF_ID],
         model="Max OSX Computer",
-        sw_version=nvr["server_version"],
+        sw_version=nvr.version,
     )
 
 

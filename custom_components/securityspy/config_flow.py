@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import logging
 import voluptuous as vol
+from typing import Any
 
 from homeassistant import config_entries
 from homeassistant.const import (
@@ -13,11 +14,14 @@ from homeassistant.const import (
     CONF_USERNAME,
 )
 from homeassistant.core import callback
+from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers.aiohttp_client import async_create_clientsession
-from pysecspy.secspy_server import SecSpyServer
-from pysecspy.errors import InvalidCredentials, RequestError
-from pysecspy.const import SERVER_ID, SERVER_NAME
-
+from pysecspy.secspy import (
+    SecuritySpy,
+    SecSpyServerData,
+    RequestError,
+    ResultError,
+)
 from .const import (
     CONF_DISABLE_RTSP,
     CONF_MIN_SCORE,
@@ -31,7 +35,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a SecuritySpy config flow."""
+    """Config Flow for SecuritySpy."""
 
     VERSION = 1
 
@@ -41,27 +45,26 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
         """Get the options flow for this handler."""
         return OptionsFlowHandler(config_entry)
 
-    async def async_step_user(self, user_input=None):
+    async def async_step_user(self, user_input: dict[str, Any] | None = None) -> FlowResult:
         """Handle a flow initiated by the user."""
         if user_input is None:
             return await self._show_setup_form(user_input)
 
         errors = {}
-
         session = async_create_clientsession(self.hass)
 
-        secspy = SecSpyServer(
-            session,
-            user_input[CONF_HOST],
-            user_input[CONF_PORT],
-            user_input[CONF_USERNAME],
-            user_input[CONF_PASSWORD],
-            DEFAULT_MIN_SCORE,
+        secspy = SecuritySpy(
+            session=session,
+            host=user_input[CONF_HOST],
+            port=user_input[CONF_PORT],
+            username=user_input[CONF_USERNAME],
+            password=user_input[CONF_PASSWORD],
+            min_classify_score=DEFAULT_MIN_SCORE,
         )
 
         try:
-            server_info = await secspy.get_server_information()
-        except InvalidCredentials as ex:
+            server_info: SecSpyServerData = await secspy.get_server_information()
+        except ResultError as ex:
             _LOGGER.debug(ex)
             errors["base"] = "connection_error"
             return await self._show_setup_form(errors)
@@ -70,7 +73,7 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             errors["base"] = "nvr_error"
             return await self._show_setup_form(errors)
 
-        if server_info["server_version"] < MIN_SECSPY_VERSION:
+        if server_info.version < MIN_SECSPY_VERSION:
             _LOGGER.error(
                 "This version of SecuritySpy is too old. Please upgrade to minimum V%s and try again.",
                 MIN_SECSPY_VERSION,
@@ -78,12 +81,12 @@ class SecuritySpyFlowHandler(config_entries.ConfigFlow, domain=DOMAIN):
             errors["base"] = "version_old"
             return await self._show_setup_form(errors)
 
-        unique_id = server_info[SERVER_ID]
+        unique_id = server_info.uuid
         await self.async_set_unique_id(unique_id)
         self._abort_if_unique_id_configured()
 
-        server_name = server_info[SERVER_NAME]
-        server_ip_address = server_info["server_ip_address"]
+        server_name = server_info.name
+        server_ip_address = server_info.ip_address
         id_name = f"{server_name} ({server_ip_address})"
 
         return self.async_create_entry(
@@ -137,12 +140,6 @@ class OptionsFlowHandler(config_entries.OptionsFlow):
                         CONF_DISABLE_RTSP,
                         default=self.config_entry.options.get(CONF_DISABLE_RTSP, False),
                     ): bool,
-                    # vol.Optional(
-                    #     CONF_MIN_SCORE,
-                    #     default=self.config_entry.options.get(
-                    #         CONF_MIN_SCORE, DEFAULT_MIN_SCORE
-                    #     ),
-                    # ): vol.All(vol.Coerce(int), vol.Range(min=20, max=100)),
                 }
             ),
         )
