@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+#macOS stuff
+.DS_Store
+
 # Distribution / packaging
 .Python
 build/
@@ -135,10 +138,7 @@ custom_components/securityspy/sserec.py
 custom_components/securityspy/stream.py
 custom_components/securityspy/test.py
 custom_components/securityspy/pyhik.py
-.DS_Store
-.DS_Store
 custom_components/securityspy/securityspy_events.py
-.DS_Store
 support_files/cap_list.xml
 custom_components/securityspy/securityspy_server_async.py
 custom_components/securityspy/securityspy_server.py
