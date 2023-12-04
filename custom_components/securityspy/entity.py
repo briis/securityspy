@@ -6,7 +6,7 @@ import logging
 from homeassistant.const import ATTR_ATTRIBUTION
 import homeassistant.helpers.device_registry as dr
 from homeassistant.helpers.entity import Entity, DeviceInfo
-
+from pysecspy.secspy import SecSpyServerData, SecuritySpy
 from .const import (
     ATTR_BRAND,
     DEFAULT_ATTRIBUTION,
@@ -23,9 +23,9 @@ class SecuritySpyEntity(Entity):
 
     def __init__(
         self,
-        secspy,
+        secspy: SecuritySpy,
         secspy_data: SecuritySpyData,
-        server_info,
+        server_info: SecSpyServerData,
         device_id,
         sensor_type,
     ):
@@ -39,13 +39,13 @@ class SecuritySpyEntity(Entity):
         self._device_data = self.secspy_data.data[self._device_id]
         self._device_name = self._device_data["name"]
         self._mac = f"{self._device_data['ip_address']}_{self._device_id}"
-        self._firmware_version = server_info["server_version"]
-        self._server_id = server_info["server_id"]
-        self._schedule_presets = server_info["schedule_presets"]
+        self._firmware_version = server_info.version
+        self._server_id = server_info.uuid
+        self._schedule_presets = server_info.presets
         self._device_type = self._device_data["type"]
         self._model = self._device_data["model"]
-        self._server_ip = server_info["server_ip_address"]
-        self._server_port = server_info["server_port"]
+        self._server_ip = server_info.ip_address
+        self._server_port = server_info.port
 
         self._attr_available = self.secspy_data.last_update_success
         if self._sensor_type is None:

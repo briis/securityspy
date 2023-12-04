@@ -143,3 +143,4 @@ support_files/cap_list.xml
 custom_components/securityspy/securityspy_server_async.py
 custom_components/securityspy/securityspy_server.py
 test.py
+config/*

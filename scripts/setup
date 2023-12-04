@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+set -e
+
+cd "$(dirname "$0")/.."
+
+sudo apt update
+
+sudo apt install -y libpcap-dev ffmpeg vim curl jq libturbojpeg0
+
+python3 -m pip install --requirement requirements.txt
