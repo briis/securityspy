@@ -27,7 +27,7 @@ _PTZ_STANDARDS = {
 async def async_setup_entry(
     hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
-    """Setup Binary Sensors."""
+    """SecuritySpy Button Platform."""
     entry_data = hass.data[DOMAIN][entry.entry_id]
     secspy_object = entry_data["nvr"]
     secspy_data = entry_data["secspy_data"]

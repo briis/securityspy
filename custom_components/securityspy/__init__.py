@@ -1,7 +1,6 @@
 """SecuritySpy Platform."""
 from __future__ import annotations
 
-import asyncio
 import logging
 
 from aiohttp.client_exceptions import ServerDisconnectedError
