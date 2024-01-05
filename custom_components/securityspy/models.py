@@ -4,7 +4,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 
-@dataclass
+@dataclass(frozen=True, kw_only=True)
 class SecSpyRequiredKeysMixin:
     """Mixin for required keys."""
 

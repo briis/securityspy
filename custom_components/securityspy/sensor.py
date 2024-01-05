@@ -11,6 +11,7 @@ from homeassistant.components.sensor import (
 )
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import EntityCategory
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from .entity import SecuritySpyEntity
 
 from .const import (
@@ -26,7 +27,7 @@ from .const import (
 from .models import SecSpyRequiredKeysMixin
 
 
-@dataclass
+@dataclass(frozen=True, kw_only=True)
 class SecuritySpyEntityDescription(SecSpyRequiredKeysMixin, SensorEntityDescription):
     """Describes SecuritySpy Sensor entity."""
 
@@ -61,7 +62,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
-    hass: HomeAssistant, entry: ConfigEntry, async_add_entities
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     """A SecsuritySpy Sensor."""
     entry_data = hass.data[DOMAIN][entry.entry_id]

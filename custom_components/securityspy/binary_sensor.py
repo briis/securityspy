@@ -14,6 +14,7 @@ from homeassistant.const import (
     ATTR_LAST_TRIP_TIME,
 )
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import (
     ATTR_EVENT_LENGTH,
@@ -27,25 +28,22 @@ from .entity import SecuritySpyEntity
 from .models import SecSpyRequiredKeysMixin
 
 
-@dataclass
+@dataclass(frozen=True, kw_only=True)
 class SecSpyBinaryEntityDescription(
     SecSpyRequiredKeysMixin, BinarySensorEntityDescription
 ):
     """Describes SecuritySpy Binary Sensor entity."""
 
 
-_KEY_ONLINE = "online"
-_KEY_MOTION = "motion"
-
 BINARY_SENSORS: tuple[SecSpyBinaryEntityDescription, ...] = (
     SecSpyBinaryEntityDescription(
-        key=_KEY_MOTION,
+        key="motion",
         name="Motion",
         device_class=BinarySensorDeviceClass.MOTION,
         trigger_field="event_on",
     ),
     SecSpyBinaryEntityDescription(
-        key=_KEY_ONLINE,
+        key="online",
         icon="mdi:access-point-network",
         name="Online",
         trigger_field="event_online",
@@ -57,7 +55,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
-    hass: HomeAssistant, entry: ConfigEntry, async_add_entities
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     """Setup Binary Sensors."""
     entry_data = hass.data[DOMAIN][entry.entry_id]

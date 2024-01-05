@@ -3,11 +3,12 @@ from __future__ import annotations
 
 import logging
 
-from homeassistant.components.camera import SUPPORT_STREAM, Camera
+from homeassistant.components.camera import Camera, CameraEntityFeature
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import ATTR_LAST_TRIP_TIME
 from homeassistant.helpers import entity_platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import (
     DOMAIN,
@@ -30,7 +31,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
-    hass: HomeAssistant, entry: ConfigEntry, async_add_entities
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     """Discover cameras on a SecuritySpy NVR."""
     entry_data = hass.data[DOMAIN][entry.entry_id]
@@ -83,7 +84,10 @@ class SecuritySpyCamera(SecuritySpyEntity, Camera):
             None if disable_stream else self._device_data["live_stream"]
         )
         self._last_image: bytes | None = None
-        self._attr_supported_features = SUPPORT_STREAM if self._stream_source else 0
+        if self._stream_source:
+            self._attr_supported_features = CameraEntityFeature.STREAM
+        else:
+            self._attr_supported_features = CameraEntityFeature(0)
         self.stream_options[FFMPEG_OPTION_MAP[CONF_RTSP_TRANSPORT]] = "tcp"
 
     @property

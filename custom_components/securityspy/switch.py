@@ -8,6 +8,7 @@ from homeassistant.components.switch import SwitchEntity, SwitchEntityDescriptio
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import EntityCategory
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import (
     DOMAIN,
@@ -19,7 +20,7 @@ from .entity import SecuritySpyEntity
 from .models import SecSpyRequiredKeysMixin
 
 
-@dataclass
+@dataclass(frozen=True, kw_only=True)
 class SecSpyBinarySwitchDescription(SecSpyRequiredKeysMixin, SwitchEntityDescription):
     """Describes SecuritySpy Switch entity."""
 
@@ -48,7 +49,7 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
-    hass: HomeAssistant, entry: ConfigEntry, async_add_entities
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
 ) -> None:
     """A SecsuritySpy Switch."""
     entry_data = hass.data[DOMAIN][entry.entry_id]
