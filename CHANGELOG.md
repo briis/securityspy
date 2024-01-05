@@ -1,5 +1,13 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.1.8
+
+Release date: `2024-01-05`
+
+### Changes
+
+- Fixing errors occuring after upgrading to HA 2024.1. Closing Issue [#52](https://github.com/briis/securityspy/issues/52)
+
 ## Version 1.1.7
 
 Release date: 2023-02-04
