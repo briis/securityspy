@@ -1,16 +1,16 @@
 {
-    "domain": "securityspy",
-    "name": "SecuritySpy for Home Assistant",
-    "documentation": "https://github.com/briis/securityspy",
-    "issue_tracker": "https://github.com/briis/securityspy/issues",
-    "config_flow": true,
-    "dependencies": [],
-    "version": "1.1.8",
     "codeowners": [
         "@briis"
     ],
+    "config_flow": true,
+    "dependencies": [],
+    "documentation": "https://github.com/briis/securityspy",
+    "domain": "securityspy",
+    "iot_class": "local_push",
+    "issue_tracker": "https://github.com/briis/securityspy/issues",
+    "name": "SecuritySpy for Home Assistant",
     "requirements": [
         "pysecspy==1.3.5"
     ],
-    "iot_class": "local_push"
+    "version": "1.1.8",
 }
