@@ -1,6 +1,10 @@
 # SecuritySpy for Home Assistant
 ![GitHub release](https://img.shields.io/github/release/briis/securityspy.svg?style=flat-square) [![hacs_badge](https://img.shields.io/badge/HACS-Default-orange.svg?style=flat-square)](https://github.com/hacs/integration)
 
+## This Integration will no longer be maintained
+
+I did give it a try, but I simply don't have the resources to maintain this integration anymore, and therefore I will remove it from the default HACS store. I will leave the Github Repository open, and I hope that someone else will be able to take it over.
+
 ## Overview
 
 This is a Home Assistant Integration for [Ben Software](https://www.bensoftware.com)'s SecuritySpy Surveillance system.
