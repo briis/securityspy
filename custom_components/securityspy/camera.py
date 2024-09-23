@@ -54,7 +54,7 @@ async def async_setup_entry(
 
     async_add_entities(cameras)
 
-    platform = entity_platform.current_platform.get()
+    platform = entity_platform.async_get_current_platform()
 
     _LOGGER.debug("Creating Service: Set Arm Mode")
     platform.async_register_entity_service(
@@ -194,3 +194,4 @@ def _write_file(to_file, content):
     with open(to_file, "wb") as _file:
         _file.write(content)
         _LOGGER.debug("File written to %s", to_file)
+
