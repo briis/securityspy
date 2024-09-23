@@ -1,5 +1,13 @@
 # Changelog for SecuritySpy Home Assistant Integration
 
+## Version 1.1.9
+
+Release date: `2024-09-23`
+
+### Changes
+
+- Fixing deprecating warnings occuring in HA 2024.9. Closing Issue [#98](https://github.com/briis/securityspy/issues/98) and [#99](https://github.com/briis/securityspy/issues/99)
+
 ## Version 1.1.8
 
 Release date: `2024-01-05`
