@@ -4,6 +4,8 @@
 
 Release date: `2024-09-23`
 
+**NOTE** I do not have access to the latest version of SecuritySpy, neither do I use it in my home, so these changes have only been tested against an older V5.x system which was temporarely installed. I also have to state that I do NOT maintain this Module anymore, as I simply don't have the resources. If I can I will try and fix issues like this, but eventually the Integration will most likely stop working due to changes in Home Assistant.
+
 ### Changes
 
 - Fixing deprecating warnings occuring in HA 2024.9. Closing Issue [#98](https://github.com/briis/securityspy/issues/98) and [#99](https://github.com/briis/securityspy/issues/99)
