@@ -1,6 +1,4 @@
 colorlog==6.8.2
-homeassistant==2024.7.2
-pip>=23.2.1,<24.1
-ruff==0.3.7
-setuptools>=70.0.0
-wheel>=0.37.0,<0.44
+homeassistant==2024.9.2
+pip>=23.2.1,<24.3
+ruff==0.6.5
